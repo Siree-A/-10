@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เอกสารการเรียน - หลักสูตรพัฒนางานวิจัยสำหรับเภสัชกร เขตสุขภาพที่ 10 รุ่นที่ 2</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: K2D -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=K2D:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['K2D', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            900: '#03045e',
+                            800: '#023e8a',
+                            700: '#0077b6',
+                            600: '#0096c7',
+                            500: '#00b4d8',
+                            400: '#90e0ef',
+                            300: '#caf0f8',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body { font-family: 'K2D', sans-serif; scroll-behavior: smooth; }
+        .glass-nav {
+            background: rgba(3, 4, 94, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+        }
+        .hover-lift { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .hover-lift:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased selection:bg-brand-500 selection:text-white pt-20">
+
+    <!-- Navbar -->
+    <nav x-data="{ isOpen: false }" class="fixed top-0 w-full z-50 glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="index.html" class="flex items-center gap-3">
+                        <img class="h-12 w-auto bg-white rounded-full p-1 shadow-md" src="LOGO developer.png" alt="Developer Logo" onerror="this.src='https://via.placeholder.com/150?text=LOGO'">
+                        <img class="h-12 w-auto bg-white rounded-full p-1 shadow-md hidden sm:block" src="LOGO supportors.png" alt="Supportors Logo" onerror="this.style.display='none'">
+                    </a>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="index.html" class="text-white hover:text-brand-300 transition-colors font-medium text-lg">หน้าหลัก</a>
+                    <a href="documents.html" class="text-brand-300 font-bold text-lg border-b-2 border-brand-300">เอกสารการเรียน</a>
+                    <a href="portfolio.html" class="text-white hover:text-brand-300 transition-colors font-medium text-lg">Portfolio นักวิจัย</a>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button @click="isOpen = !isOpen" type="button" class="text-white hover:text-brand-300 focus:outline-none">
+                        <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path x-show="!isOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                            <path x-show="isOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" style="display: none;" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div x-show="isOpen" x-transition class="md:hidden glass-nav absolute w-full" style="display: none;">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="index.html" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-brand-800">หน้าหลัก</a>
+                <a href="documents.html" class="block px-3 py-2 rounded-md text-base font-bold text-brand-300 bg-brand-800">เอกสารการเรียน</a>
+                <a href="portfolio.html" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-brand-800">Portfolio นักวิจัย</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Documents Section -->
+    <section id="documents" x-data="{ docTab: 'general' }" class="py-12 bg-brand-50 min-h-[calc(100vh-200px)]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-8 mt-8">
+                <h2 class="text-3xl md:text-4xl font-bold text-brand-900 mb-4">เอกสารการเรียนและกำหนดการ</h2>
+                <div class="h-1 w-20 bg-brand-500 mx-auto rounded mb-8"></div>
+                
+                <!-- Tabs -->
+                <div class="flex justify-center gap-4 mb-12">
+                    <button @click="docTab = 'general'" :class="docTab === 'general' ? 'bg-brand-600 text-white' : 'bg-white text-brand-600 hover:bg-brand-100'" class="px-6 py-2 rounded-full font-bold shadow-md transition-colors">
+                        เอกสารทั่วไปและกำหนดการ
+                    </button>
+                    <button @click="docTab = 'materials'" :class="docTab === 'materials' ? 'bg-brand-600 text-white' : 'bg-white text-brand-600 hover:bg-brand-100'" class="px-6 py-2 rounded-full font-bold shadow-md transition-colors">
+                        เนื้อหาเอกสารการเรียน
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Tab: General -->
+            <div x-show="docTab === 'general'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform translate-y-4" x-transition:enter-end="opacity-100 transform translate-y-0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Doc Card 1 -->
+                <a href="69-วิจัย เขต 10_22.09.69.pdf" target="_blank" class="glass-card p-6 rounded-2xl hover-lift flex items-start gap-4 cursor-pointer group">
+                    <div class="p-3 bg-brand-100 rounded-lg text-brand-600 group-hover:bg-brand-600 group-hover:text-white transition-colors">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">เอกสาร 69-วิจัย เขต 10</h3>
+                        <p class="text-gray-600 text-sm">รูปแบบ PDF (22.09.69)</p>
+                    </div>
+                </a>
+                
+                <!-- Doc Card 2 -->
+                <a href="กำหนดการfinal2 วันที่ 21 กย.69.docx" target="_blank" class="glass-card p-6 rounded-2xl hover-lift flex items-start gap-4 cursor-pointer group">
+                    <div class="p-3 bg-blue-100 rounded-lg text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">กำหนดการ (21 ก.ย. 69)</h3>
+                        <p class="text-gray-600 text-sm">รูปแบบ Word (Docx)</p>
+                    </div>
+                </a>
+                
+                <!-- Doc Card 3 -->
+                <a href="ประกาศรายชื่อผู้มีสิทธิ์เข้าร่วมอบรมขั้นสูง.docx" target="_blank" class="glass-card p-6 rounded-2xl hover-lift flex items-start gap-4 cursor-pointer group">
+                    <div class="p-3 bg-blue-100 rounded-lg text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">รายชื่อผู้มีสิทธิ์เข้าร่วม (ขั้นสูง)</h3>
+                        <p class="text-gray-600 text-sm">รูปแบบ Word (Docx)</p>
+                    </div>
+                </a>
+                
+                <!-- Doc Card 4 -->
+                <a href="รายชื่อรวมเช็กชื่อ_ฉบับปรับกลุ่มใหม่_B_A.docx.pdf" target="_blank" class="glass-card p-6 rounded-2xl hover-lift flex items-start gap-4 cursor-pointer group">
+                    <div class="p-3 bg-brand-100 rounded-lg text-brand-600 group-hover:bg-brand-600 group-hover:text-white transition-colors">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">รายชื่อเช็กชื่อ ฉบับปรับกลุ่ม</h3>
+                        <p class="text-gray-600 text-sm">รูปแบบ PDF</p>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Tab: Materials -->
+            <div x-show="docTab === 'materials'" style="display: none;" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform translate-y-4" x-transition:enter-end="opacity-100 transform translate-y-0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="col-span-full text-center py-12 bg-white rounded-2xl border-2 border-dashed border-brand-300">
+                    <svg class="w-16 h-16 text-brand-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                    <h3 class="text-xl font-bold text-brand-800 mb-2">เนื้อหาเอกสารการเรียน</h3>
+                    <p class="text-gray-500 font-medium max-w-md mx-auto">ส่วนนี้เตรียมไว้สำหรับใส่เนื้อหาเอกสารการเรียนโดยเฉพาะ (เช่น ไฟล์แบบฝึกหัด หรือสไลด์นำเสนอ) ซึ่งสามารถเพิ่มลิงก์ดาวน์โหลดได้ในภายหลัง</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-brand-900 text-brand-300 py-12 border-t border-brand-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center mb-8 border-b border-brand-800 pb-8">
+                <div>
+                    <h4 class="text-xl font-bold text-white mb-2">ข่าวสารและประชาสัมพันธ์</h4>
+                    <p class="text-sm">ติดตามบทความวิชาการและวารสารที่ตีพิมพ์ โดย ชมรมเภสัชสาธารณสุขจังหวัดแห่งประเทศไทย</p>
+                </div>
+                <div class="md:text-right flex flex-col md:items-end gap-3">
+                    <a href="https://he02.tci-thaijo.org/index.php/jhcp" target="_blank" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-700 hover:bg-brand-600 text-white rounded-full transition-colors shadow-lg hover:shadow-xl font-medium text-sm sm:text-base w-full md:w-auto">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                        Journal Of Health Consumer Protection
+                    </a>
+                    <a href="https://www.med-tu.org/GCP_HSP/" target="_blank" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white text-brand-900 hover:bg-brand-100 rounded-full transition-colors shadow-lg hover:shadow-xl font-medium text-sm sm:text-base w-full md:w-auto">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        อบรม GCPOnline มหาวิทยาลัยธรรมศาสตร์
+                    </a>
+                </div>
+            </div>
+            <div class="text-center">
+                <p>&copy; 2026 หลักสูตรพัฒนานักวิจัย สำหรับเภสัชกร เขตสุขภาพที่ 10 รุ่นที่ 2. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
