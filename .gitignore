@@ -6,3 +6,7 @@
 # Operating-system metadata
 .DS_Store
 Thumbs.db
+
+# Local browser verification
+node_modules/
+test-results/

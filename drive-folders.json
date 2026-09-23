@@ -1,0 +1,121 @@
+{
+  "root": "https://drive.google.com/drive/folders/1fvD9AZDzTBhdlqf7MebaH68sVqptJ_xY",
+  "tracks": {
+    "Advanced": "1wHmrTs9GdnA_4eTG4ljFdhl7RO8GhP73",
+    "Basic": "17X4hH1qJG0TyyjHf2AZD9DqTnLiKJ-m1"
+  },
+  "groups": {
+    "Advanced1": {
+      "success": true,
+      "id": "1v0n500c0zhi4oyXOyfxSpez6QyrsuD8d",
+      "url": "https://drive.google.com/drive/folders/1v0n500c0zhi4oyXOyfxSpez6QyrsuD8d",
+      "title": "กลุ่มที่ 1",
+      "parent_id": "1wHmrTs9GdnA_4eTG4ljFdhl7RO8GhP73"
+    },
+    "Advanced2": {
+      "success": true,
+      "id": "1p3FVFaCExycU0VMwpFOhYjreu3WPRZjg",
+      "url": "https://drive.google.com/drive/folders/1p3FVFaCExycU0VMwpFOhYjreu3WPRZjg",
+      "title": "กลุ่มที่ 2",
+      "parent_id": "1wHmrTs9GdnA_4eTG4ljFdhl7RO8GhP73"
+    },
+    "Advanced3": {
+      "success": true,
+      "id": "1Plk0Sy1-ukxhk_pe1HjrVWeGaZ5Y66hd",
+      "url": "https://drive.google.com/drive/folders/1Plk0Sy1-ukxhk_pe1HjrVWeGaZ5Y66hd",
+      "title": "กลุ่มที่ 3",
+      "parent_id": "1wHmrTs9GdnA_4eTG4ljFdhl7RO8GhP73"
+    },
+    "Advanced4": {
+      "success": true,
+      "id": "1Wbr80uhzR0wWGZpWSee9vTHRkrDdVbkk",
+      "url": "https://drive.google.com/drive/folders/1Wbr80uhzR0wWGZpWSee9vTHRkrDdVbkk",
+      "title": "กลุ่มที่ 4",
+      "parent_id": "1wHmrTs9GdnA_4eTG4ljFdhl7RO8GhP73"
+    },
+    "Advanced5": {
+      "success": true,
+      "id": "1Pfywj3laqWMq6rOcQwrAMrxMTW4wXqXH",
+      "url": "https://drive.google.com/drive/folders/1Pfywj3laqWMq6rOcQwrAMrxMTW4wXqXH",
+      "title": "กลุ่มที่ 5",
+      "parent_id": "1wHmrTs9GdnA_4eTG4ljFdhl7RO8GhP73"
+    },
+    "Advanced6": {
+      "success": true,
+      "id": "1y-gnoKP5RsiKNnQHu_1wl-s5CSr5OHTy",
+      "url": "https://drive.google.com/drive/folders/1y-gnoKP5RsiKNnQHu_1wl-s5CSr5OHTy",
+      "title": "กลุ่มที่ 6",
+      "parent_id": "1wHmrTs9GdnA_4eTG4ljFdhl7RO8GhP73"
+    },
+    "Basic1": {
+      "success": true,
+      "id": "1oYSybMddpm1-vMnbW3SN7Xxg6q406RqQ",
+      "url": "https://drive.google.com/drive/folders/1oYSybMddpm1-vMnbW3SN7Xxg6q406RqQ",
+      "title": "กลุ่มที่ 1",
+      "parent_id": "17X4hH1qJG0TyyjHf2AZD9DqTnLiKJ-m1"
+    },
+    "Basic2": {
+      "success": true,
+      "id": "1QmPsjNUW2Dg_llvPcEcwpQ6H-ccHW-m0",
+      "url": "https://drive.google.com/drive/folders/1QmPsjNUW2Dg_llvPcEcwpQ6H-ccHW-m0",
+      "title": "กลุ่มที่ 2",
+      "parent_id": "17X4hH1qJG0TyyjHf2AZD9DqTnLiKJ-m1"
+    },
+    "Basic3": {
+      "success": true,
+      "id": "1OGwabrBdpgIMmzyt5Tu1Pn7f9v3hiRMG",
+      "url": "https://drive.google.com/drive/folders/1OGwabrBdpgIMmzyt5Tu1Pn7f9v3hiRMG",
+      "title": "กลุ่มที่ 3",
+      "parent_id": "17X4hH1qJG0TyyjHf2AZD9DqTnLiKJ-m1"
+    },
+    "Basic4": {
+      "success": true,
+      "id": "190eEXrymSdAc05n0WdykSgYcdtKFdMEF",
+      "url": "https://drive.google.com/drive/folders/190eEXrymSdAc05n0WdykSgYcdtKFdMEF",
+      "title": "กลุ่มที่ 4",
+      "parent_id": "17X4hH1qJG0TyyjHf2AZD9DqTnLiKJ-m1"
+    },
+    "Basic5": {
+      "success": true,
+      "id": "1HI3gXynL2hyROkVCFZAKIlz3CDEXpLYp",
+      "url": "https://drive.google.com/drive/folders/1HI3gXynL2hyROkVCFZAKIlz3CDEXpLYp",
+      "title": "กลุ่มที่ 5",
+      "parent_id": "17X4hH1qJG0TyyjHf2AZD9DqTnLiKJ-m1"
+    },
+    "Basic6": {
+      "success": true,
+      "id": "10hxgdhXefPLVRaimPFGFesw2XS-50MMZ",
+      "url": "https://drive.google.com/drive/folders/10hxgdhXefPLVRaimPFGFesw2XS-50MMZ",
+      "title": "กลุ่มที่ 6",
+      "parent_id": "17X4hH1qJG0TyyjHf2AZD9DqTnLiKJ-m1"
+    },
+    "Basic7": {
+      "success": true,
+      "id": "1pJcA1V7NqjccAewuhn68ROfMDNsMjezP",
+      "url": "https://drive.google.com/drive/folders/1pJcA1V7NqjccAewuhn68ROfMDNsMjezP",
+      "title": "กลุ่มที่ 7",
+      "parent_id": "17X4hH1qJG0TyyjHf2AZD9DqTnLiKJ-m1"
+    },
+    "Basic8": {
+      "success": true,
+      "id": "1kXFg4JQmJczP_sL-ggOyKavqHbDjrd01",
+      "url": "https://drive.google.com/drive/folders/1kXFg4JQmJczP_sL-ggOyKavqHbDjrd01",
+      "title": "กลุ่มที่ 8",
+      "parent_id": "17X4hH1qJG0TyyjHf2AZD9DqTnLiKJ-m1"
+    },
+    "Basic9": {
+      "success": true,
+      "id": "1hQsZ0wUA9xLyQpLfa-TtoMXO_CUAD40p",
+      "url": "https://drive.google.com/drive/folders/1hQsZ0wUA9xLyQpLfa-TtoMXO_CUAD40p",
+      "title": "กลุ่มที่ 9",
+      "parent_id": "17X4hH1qJG0TyyjHf2AZD9DqTnLiKJ-m1"
+    },
+    "Basic10": {
+      "success": true,
+      "id": "1ngEAWWiuuuWw5ZSPdPrzwCL4cyUe1VZO",
+      "url": "https://drive.google.com/drive/folders/1ngEAWWiuuuWw5ZSPdPrzwCL4cyUe1VZO",
+      "title": "กลุ่มที่ 10",
+      "parent_id": "17X4hH1qJG0TyyjHf2AZD9DqTnLiKJ-m1"
+    }
+  }
+}

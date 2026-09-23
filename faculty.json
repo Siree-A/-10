@@ -1,0 +1,290 @@
+[
+  {
+    "key": "basic-10",
+    "category": "advisor-basic",
+    "group": 1,
+    "sourceTitle": "LINE_ALBUM_Advisor(Basic)_260923_10.jpg",
+    "sourceUrl": "https://drive.google.com/file/d/1GQEeKSoiInWLh2tQ4qfW-O9Xu3ua9_cD/view?usp=drivesdk",
+    "image": "assets/faculty/basic-10.webp",
+    "original": "assets/faculty/originals/basic-10.jpg"
+  },
+  {
+    "key": "basic-9",
+    "category": "advisor-basic",
+    "group": 2,
+    "sourceTitle": "LINE_ALBUM_Advisor(Basic)_260923_9.jpg",
+    "sourceUrl": "https://drive.google.com/file/d/1Qe9MnkGuPzVO2GLu4hoS1nUDBuUzhnTj/view?usp=drivesdk",
+    "image": "assets/faculty/basic-9.webp",
+    "original": "assets/faculty/originals/basic-9.jpg"
+  },
+  {
+    "key": "basic-8",
+    "category": "advisor-basic",
+    "group": 3,
+    "sourceTitle": "LINE_ALBUM_Advisor(Basic)_260923_8.jpg",
+    "sourceUrl": "https://drive.google.com/file/d/1Eo7X2BU5uXbdU79BDA3Gk-CFhvSWmdij/view?usp=drivesdk",
+    "image": "assets/faculty/basic-8.webp",
+    "original": "assets/faculty/originals/basic-8.jpg"
+  },
+  {
+    "key": "basic-7",
+    "category": "advisor-basic",
+    "group": 4,
+    "sourceTitle": "LINE_ALBUM_Advisor(Basic)_260923_7.jpg",
+    "sourceUrl": "https://drive.google.com/file/d/1W1IHlFHamQD-w_kV-mOVEv_JRTMtRUlr/view?usp=drivesdk",
+    "image": "assets/faculty/basic-7.webp",
+    "original": "assets/faculty/originals/basic-7.jpg"
+  },
+  {
+    "key": "basic-6",
+    "category": "advisor-basic",
+    "group": 5,
+    "sourceTitle": "LINE_ALBUM_Advisor(Basic)_260923_6.jpg",
+    "sourceUrl": "https://drive.google.com/file/d/1yGn4_3WNmkkZVHV0OaDKXScRNNXMQxYo/view?usp=drivesdk",
+    "image": "assets/faculty/basic-6.webp",
+    "original": "assets/faculty/originals/basic-6.jpg"
+  },
+  {
+    "key": "basic-5",
+    "category": "advisor-basic",
+    "group": 6,
+    "sourceTitle": "LINE_ALBUM_Advisor(Basic)_260923_5.jpg",
+    "sourceUrl": "https://drive.google.com/file/d/1zPZ8rMuWUzdOWEZzUY9xZWxu0km8WMJJ/view?usp=drivesdk",
+    "image": "assets/faculty/basic-5.webp",
+    "original": "assets/faculty/originals/basic-5.jpg"
+  },
+  {
+    "key": "basic-4",
+    "category": "advisor-basic",
+    "group": 7,
+    "sourceTitle": "LINE_ALBUM_Advisor(Basic)_260923_4.jpg",
+    "sourceUrl": "https://drive.google.com/file/d/1-p_1oQyKc35m8r0fgTCwWRaVcVwzSPUP/view?usp=drivesdk",
+    "image": "assets/faculty/basic-4.webp",
+    "original": "assets/faculty/originals/basic-4.jpg"
+  },
+  {
+    "key": "basic-3",
+    "category": "advisor-basic",
+    "group": 8,
+    "sourceTitle": "LINE_ALBUM_Advisor(Basic)_260923_3.jpg",
+    "sourceUrl": "https://drive.google.com/file/d/1r9Eaxifj0QzDlDBvUjqYhVMl8w2rCXaz/view?usp=drivesdk",
+    "image": "assets/faculty/basic-3.webp",
+    "original": "assets/faculty/originals/basic-3.jpg"
+  },
+  {
+    "key": "basic-2",
+    "category": "advisor-basic",
+    "group": 9,
+    "sourceTitle": "LINE_ALBUM_Advisor(Basic)_260923_2.jpg",
+    "sourceUrl": "https://drive.google.com/file/d/1lvMwPJCxsWcKmdByCzg1axSscRFrMjcb/view?usp=drivesdk",
+    "image": "assets/faculty/basic-2.webp",
+    "original": "assets/faculty/originals/basic-2.jpg"
+  },
+  {
+    "key": "basic-1",
+    "category": "advisor-basic",
+    "group": 10,
+    "sourceTitle": "LINE_ALBUM_Advisor(Basic)_260923_1.jpg",
+    "sourceUrl": "https://drive.google.com/file/d/1xe_-sGFGT374uBl52NNSrxmZ7OlFJRFc/view?usp=drivesdk",
+    "image": "assets/faculty/basic-1.webp",
+    "original": "assets/faculty/originals/basic-1.jpg"
+  },
+  {
+    "key": "co-advanced-6",
+    "category": "co-advanced",
+    "group": 1,
+    "sourceTitle": "LINE_ALBUM_Co-Advisor (Advance)_260923_6.jpg",
+    "sourceUrl": "https://drive.google.com/file/d/1D1MizogCa2iSduDZ_7ewIUzfV2-OxMM-/view?usp=drivesdk",
+    "image": "assets/faculty/co-advanced-6.webp",
+    "original": "assets/faculty/originals/co-advanced-6.jpg"
+  },
+  {
+    "key": "co-advanced-5",
+    "category": "co-advanced",
+    "group": 2,
+    "sourceTitle": "LINE_ALBUM_Co-Advisor (Advance)_260923_5.jpg",
+    "sourceUrl": "https://drive.google.com/file/d/1V4l88BQw2s83uL4vUYMHunZAj3RPmxlY/view?usp=drivesdk",
+    "image": "assets/faculty/co-advanced-5.webp",
+    "original": "assets/faculty/originals/co-advanced-5.jpg"
+  },
+  {
+    "key": "co-advanced-4",
+    "category": "co-advanced",
+    "group": 3,
+    "sourceTitle": "LINE_ALBUM_Co-Advisor (Advance)_260923_4.jpg",
+    "sourceUrl": "https://drive.google.com/file/d/1uPpd6LFlmpTHHGxk3zzvblVOASLwG0DD/view?usp=drivesdk",
+    "image": "assets/faculty/co-advanced-4.webp",
+    "original": "assets/faculty/originals/co-advanced-4.jpg"
+  },
+  {
+    "key": "co-advanced-3",
+    "category": "co-advanced",
+    "group": 4,
+    "sourceTitle": "LINE_ALBUM_Co-Advisor (Advance)_260923_3.jpg",
+    "sourceUrl": "https://drive.google.com/file/d/12vrpl6AzfGHmATwUBK-rcolT3e5giHQE/view?usp=drivesdk",
+    "image": "assets/faculty/co-advanced-3.webp",
+    "original": "assets/faculty/originals/co-advanced-3.jpg"
+  },
+  {
+    "key": "co-advanced-2",
+    "category": "co-advanced",
+    "group": 5,
+    "sourceTitle": "LINE_ALBUM_Co-Advisor (Advance)_260923_2.jpg",
+    "sourceUrl": "https://drive.google.com/file/d/1fSVIerKYOuX_XjVwUR_YR21cLNXyqhE1/view?usp=drivesdk",
+    "image": "assets/faculty/co-advanced-2.webp",
+    "original": "assets/faculty/originals/co-advanced-2.jpg"
+  },
+  {
+    "key": "co-advanced-1",
+    "category": "co-advanced",
+    "group": 6,
+    "sourceTitle": "LINE_ALBUM_Co-Advisor (Advance)_260923_1.jpg",
+    "sourceUrl": "https://drive.google.com/file/d/1Lub7LPSimQe5n-TWBB-lAGT0p-_8OGy6/view?usp=drivesdk",
+    "image": "assets/faculty/co-advanced-1.webp",
+    "original": "assets/faculty/originals/co-advanced-1.jpg"
+  },
+  {
+    "key": "co-basic-2",
+    "category": "co-basic",
+    "group": 1,
+    "sourceTitle": "LINE_ALBUM_Co-Advisor(Basic)_260923_2.jpg",
+    "sourceUrl": "https://drive.google.com/file/d/1AppGKxkjNgA8kqeC8AWd0eyIU8PNjpUL/view?usp=drivesdk",
+    "image": "assets/faculty/co-basic-2.webp",
+    "original": "assets/faculty/originals/co-basic-2.jpg"
+  },
+  {
+    "key": "advanced-4",
+    "category": "co-basic",
+    "group": 2,
+    "sourceTitle": "LINE_ALBUM_Advisor(Advence)_260923_4.jpg",
+    "sourceUrl": "https://drive.google.com/file/d/1D-7i3m2E0s1t2DQycPsfvoOEAN4xiII2/view?usp=drivesdk",
+    "image": "assets/faculty/advanced-4.webp",
+    "original": "assets/faculty/originals/advanced-4.jpg"
+  },
+  {
+    "key": "advanced-3",
+    "category": "co-basic",
+    "group": 3,
+    "sourceTitle": "LINE_ALBUM_Advisor(Advence)_260923_3.jpg",
+    "sourceUrl": "https://drive.google.com/file/d/1-_ZnO-7_a4KW4PsdM0OOJ_-xz3NYwEcq/view?usp=drivesdk",
+    "image": "assets/faculty/advanced-3.webp",
+    "original": "assets/faculty/originals/advanced-3.jpg"
+  },
+  {
+    "key": "advanced-2",
+    "category": "co-basic",
+    "group": 4,
+    "sourceTitle": "LINE_ALBUM_Advisor(Advence)_260923_2.jpg",
+    "sourceUrl": "https://drive.google.com/file/d/1FyQoUBf-BPFqfaoVk7Q0wbquFzcpPQSc/view?usp=drivesdk",
+    "image": "assets/faculty/advanced-2.webp",
+    "original": "assets/faculty/originals/advanced-2.jpg"
+  },
+  {
+    "key": "advanced-1",
+    "category": "co-basic",
+    "group": 5,
+    "sourceTitle": "LINE_ALBUM_Advisor(Advence)_260923_1.jpg",
+    "sourceUrl": "https://drive.google.com/file/d/1Tgt5i-4Srk10gUPbGuARanl2ihvqKStz/view?usp=drivesdk",
+    "image": "assets/faculty/advanced-1.webp",
+    "original": "assets/faculty/originals/advanced-1.jpg"
+  },
+  {
+    "key": "co-basic-3",
+    "category": "co-basic",
+    "group": 6,
+    "sourceTitle": "LINE_ALBUM_Co-Advisor(Basic)_260923_3.jpg",
+    "sourceUrl": "https://drive.google.com/file/d/18G_m3gA4xeBbtt_QZPdq3hbgduzYoONe/view?usp=drivesdk",
+    "image": "assets/faculty/co-basic-3.webp",
+    "original": "assets/faculty/originals/co-basic-3.jpg"
+  },
+  {
+    "key": "advanced-7",
+    "category": "co-basic",
+    "group": 7,
+    "sourceTitle": "LINE_ALBUM_Advisor(Advence)_260923_7.jpg",
+    "sourceUrl": "https://drive.google.com/file/d/1wRFAh847WYn6Pm4UcX8_HUwU7juDUvF_/view?usp=drivesdk",
+    "image": "assets/faculty/advanced-7.webp",
+    "original": "assets/faculty/originals/advanced-7.jpg"
+  },
+  {
+    "key": "advanced-6",
+    "category": "co-basic",
+    "group": 8,
+    "sourceTitle": "LINE_ALBUM_Advisor(Advence)_260923_6.jpg",
+    "sourceUrl": "https://drive.google.com/file/d/1wh92u-cBymQQR9WypHyhZLRwzzAo1wBt/view?usp=drivesdk",
+    "image": "assets/faculty/advanced-6.webp",
+    "original": "assets/faculty/originals/advanced-6.jpg"
+  },
+  {
+    "key": "advanced-5",
+    "category": "co-basic",
+    "group": 9,
+    "sourceTitle": "LINE_ALBUM_Advisor(Advence)_260923_5.jpg",
+    "sourceUrl": "https://drive.google.com/file/d/1mg5ggeY4JPNzXEbA2Cy-Nrw41n-d0iCc/view?usp=drivesdk",
+    "image": "assets/faculty/advanced-5.webp",
+    "original": "assets/faculty/originals/advanced-5.jpg"
+  },
+  {
+    "key": "co-basic-1",
+    "category": "co-basic",
+    "group": 10,
+    "sourceTitle": "LINE_ALBUM_Co-Advisor(Basic)_260923_1.jpg",
+    "sourceUrl": "https://drive.google.com/file/d/1gOyiwHZZCnZEIgaXPhrWo52XrY0ztnb6/view?usp=drivesdk",
+    "image": "assets/faculty/co-basic-1.webp",
+    "original": "assets/faculty/originals/co-basic-1.jpg"
+  },
+  {
+    "key": "advisor-advanced-1",
+    "category": "advisor-advanced",
+    "group": 1,
+    "sourceTitle": "LINE_ALBUM_Advisor(Advence)_260923_6.jpg",
+    "sourceType": "user-supplied attachment",
+    "image": "assets/faculty/advisor-advanced-1.webp",
+    "original": "assets/faculty/originals/advisor-advanced-1.jpg"
+  },
+  {
+    "key": "advisor-advanced-2",
+    "category": "advisor-advanced",
+    "group": 2,
+    "sourceTitle": "LINE_ALBUM_Advisor(Advence)_260923_5.jpg",
+    "sourceType": "user-supplied attachment",
+    "image": "assets/faculty/advisor-advanced-2.webp",
+    "original": "assets/faculty/originals/advisor-advanced-2.jpg"
+  },
+  {
+    "key": "advisor-advanced-3",
+    "category": "advisor-advanced",
+    "group": 3,
+    "sourceTitle": "LINE_ALBUM_Advisor(Advence)_260923_4.jpg",
+    "sourceType": "user-supplied attachment",
+    "image": "assets/faculty/advisor-advanced-3.webp",
+    "original": "assets/faculty/originals/advisor-advanced-3.jpg"
+  },
+  {
+    "key": "advisor-advanced-4",
+    "category": "advisor-advanced",
+    "group": 4,
+    "sourceTitle": "LINE_ALBUM_Advisor(Advence)_260923_3.jpg",
+    "sourceType": "user-supplied attachment",
+    "image": "assets/faculty/advisor-advanced-4.webp",
+    "original": "assets/faculty/originals/advisor-advanced-4.jpg"
+  },
+  {
+    "key": "advisor-advanced-5",
+    "category": "advisor-advanced",
+    "group": 5,
+    "sourceTitle": "LINE_ALBUM_Advisor(Advence)_260923_2.jpg",
+    "sourceType": "user-supplied attachment",
+    "image": "assets/faculty/advisor-advanced-5.webp",
+    "original": "assets/faculty/originals/advisor-advanced-5.jpg"
+  },
+  {
+    "key": "advisor-advanced-6",
+    "category": "advisor-advanced",
+    "group": 6,
+    "sourceTitle": "LINE_ALBUM_Advisor(Advence)_260923_1.jpg",
+    "sourceType": "user-supplied attachment",
+    "image": "assets/faculty/advisor-advanced-6.webp",
+    "original": "assets/faculty/originals/advisor-advanced-6.jpg"
+  }
+]

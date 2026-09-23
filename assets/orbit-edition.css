@@ -1,0 +1,49 @@
+/* Orbit edition: luminous identity, a prominent Rx scene and a compact chair card. */
+.brand-logos{padding:4px;border-radius:999px;gap:14px}
+.brand-logos img{border-radius:999px!important;border:2px solid #b7f3ff;box-shadow:0 0 0 4px #00b4d819,0 0 24px #00b4d833,inset 0 0 12px #90e0ef44;background:linear-gradient(145deg,#fff,#e7faff)}
+.brand-logos img:first-child{border-radius:50%!important;padding:6px}
+.brand-logos img:last-child{padding:9px 13px}
+.hero-layout{min-height:740px;gap:54px}
+.hero-faculty-visual{min-height:600px;padding:0;isolation:isolate}
+.hero-faculty-visual .orbital-scene{position:relative;inset:auto;width:100%;height:450px;opacity:1;margin:0;z-index:2}
+.hero-faculty-visual .orbit-system{inset:25px 15px 25px;animation:system-float 9s ease-in-out infinite}
+.hero-faculty-visual .orb-core{width:205px;height:205px;margin:-102.5px}
+.hero-faculty-visual .orb-core span{font-size:77px}
+.hero-faculty-visual .orbit-one{animation-duration:20s;border-color:#90e0efaa;box-shadow:0 0 17px #00b4d82c}
+.hero-faculty-visual .orbit-two{animation-duration:27s;border-color:#90e0ef70}
+.hero-faculty-visual .orbit-three{animation:outer-orbit 40s linear infinite;border-color:#90e0ef55}
+.hero-faculty-visual .label-top{top:0;left:27%}
+.hero-faculty-visual .label-left{left:0;bottom:64px}
+.hero-faculty-visual .satellite-one{width:40px;height:40px}
+.hero-faculty-visual .satellite-three{right:1%;bottom:13%;width:18px;height:18px}
+.hero-faculty-visual .scene-grid{height:55%;bottom:-30px;opacity:.8}
+.chair-feature{width:320px;margin:-2px 4px 0 auto;display:grid;grid-template-columns:126px 1fr;border-radius:18px;transform:perspective(1000px) rotateY(-7deg);box-shadow:0 22px 50px #00032b70,0 0 0 1px #90e0ef28,6px 7px 0 #00b4d810;z-index:3;background:linear-gradient(120deg,#083b76,#08255c)}
+.chair-photo-link{align-self:stretch;display:flex;align-items:center;padding:9px;background:#0b4072}
+.chair-photo-link img{border-radius:9px;aspect-ratio:940/788;object-fit:contain;width:100%}
+.chair-photo-link>span{width:24px;height:24px;font-size:13px;right:10px;top:10px}
+.chair-caption{padding:16px 14px;background:transparent}
+.chair-caption>div>span{font-size:11px}
+.chair-caption h2{font-size:18px;margin:5px 0 6px;white-space:nowrap}
+.chair-caption p{font-size:10px;line-height:1.7}
+.chair-mark{display:none}
+.meet-team-link{margin:14px 0 0 auto;max-width:340px;font-size:12px}
+.faculty-filters{gap:8px}
+.faculty-filters button{padding-inline:16px}
+@keyframes outer-orbit{from{transform:rotateX(50deg) rotateY(35deg) rotateZ(60deg)}to{transform:rotateX(50deg) rotateY(35deg) rotateZ(420deg)}}
+@media(max-width:1100px){.hero-layout{gap:30px}.hero-faculty-visual .orbital-scene{height:395px}.hero-faculty-visual{min-height:550px}.hero-faculty-visual .orb-core{width:180px;height:180px;margin:-90px}.hero-faculty-visual .orb-core span{font-size:67px}.hero-faculty-visual .label-top{left:18%}.chair-feature{width:300px;grid-template-columns:110px 1fr}.chair-caption h2{font-size:17px}.faculty-filter-bar{align-items:flex-start;flex-direction:column}}
+@media(max-width:800px){.hero-layout{gap:15px}.hero-faculty-visual{max-width:540px;min-height:560px}.hero-faculty-visual .orbital-scene{height:420px}.hero-faculty-visual .orb-core{width:200px;height:200px;margin:-100px}.hero-faculty-visual .orb-core span{font-size:76px}.hero-faculty-visual .label-top{left:25%}.chair-feature{width:320px;grid-template-columns:126px 1fr;margin-top:8px}.chair-caption{padding:15px 12px}.chair-caption h2{font-size:18px}.chair-caption p{font-size:10px}.brand-logos{gap:12px}}
+@media(max-width:620px){.faculty-filters{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.faculty-filters button{border-radius:24px;padding:10px}.faculty-filters button span{display:inline;margin-left:4px}.hero-faculty-visual .label-left{font-size:11px;bottom:52px}.hero-faculty-visual .label-left small{font-size:9px}}
+@media(max-width:430px){.hero-faculty-visual{min-height:505px}.hero-faculty-visual .orbital-scene{height:355px}.hero-faculty-visual .orbit-system{inset:24px 4px}.hero-faculty-visual .orb-core{width:163px;height:163px;margin:-81.5px}.hero-faculty-visual .orb-core span{font-size:62px}.hero-faculty-visual .label-top{left:20%;font-size:7px}.hero-faculty-visual .label-left{left:0;bottom:30px;padding:10px;font-size:10px}.hero-faculty-visual .label-left small{font-size:8px}.hero-faculty-visual .label-symbol{font-size:27px}.hero-faculty-visual .satellite-one{width:29px;height:29px}.chair-feature{width:min(300px,100%);grid-template-columns:110px 1fr;margin-top:10px}.chair-caption h2{font-size:17px}.chair-caption p{font-size:9px}.brand-logos{gap:10px;padding:2px}.brand-logos img:last-child{padding:7px 9px}.brand-logos img:first-child{padding:5px}.meet-team-link{font-size:11px}}
+@media(max-width:350px){.hero-faculty-visual .orbital-scene{height:310px}.hero-faculty-visual{min-height:465px}.hero-faculty-visual .orb-core{width:145px;height:145px;margin:-72.5px}.hero-faculty-visual .orb-core span{font-size:55px}.hero-faculty-visual .label-top{left:13%}.chair-feature{grid-template-columns:100px 1fr}.chair-caption h2{font-size:16px}.faculty-filters button{font-size:11px;padding-inline:5px}.faculty-filters button span{font-size:10px}.brand-logos{gap:8px}}
+@media(prefers-reduced-motion:reduce){.hero-faculty-visual .orbit-system,.hero-faculty-visual .orbit-three{animation:none!important}.chair-feature{transform:none}}
+
+/* Final proportion adjustment: readable chair portrait below the orbit. */
+.hero-faculty-visual .chair-feature{width:min(410px,100%);grid-template-columns:180px minmax(0,1fr);margin-top:8px}
+.hero-faculty-visual .chair-caption{padding:18px 16px}
+.hero-faculty-visual .chair-caption h2{font-size:20px;white-space:normal}
+.hero-faculty-visual .chair-caption p{font-size:11px}
+.hero-faculty-visual .meet-team-link{max-width:410px}
+@media(max-width:1100px){.hero-faculty-visual .chair-feature{width:min(360px,100%);grid-template-columns:150px minmax(0,1fr)}.hero-faculty-visual .chair-caption{padding:15px 12px}.hero-faculty-visual .chair-caption h2{font-size:18px}}
+@media(max-width:800px){.hero-faculty-visual .chair-feature{width:min(400px,100%);grid-template-columns:175px minmax(0,1fr)}.hero-faculty-visual .chair-caption h2{font-size:20px}}
+@media(max-width:430px){.hero-faculty-visual .chair-feature{width:100%;grid-template-columns:45% minmax(0,1fr)}.hero-faculty-visual .chair-caption{padding:14px 11px}.hero-faculty-visual .chair-caption h2{font-size:18px}.hero-faculty-visual .chair-caption p{font-size:10px}}
+@media(max-width:350px){.hero-faculty-visual .chair-caption h2{font-size:16px}.hero-faculty-visual .chair-caption p{font-size:9px}}
