@@ -26,3 +26,5 @@ footer a[href="https://he02.tci-thaijo.org/index.php/jhcp"]:hover,footer a[href=
 .recordings-panel a:focus-visible{outline:3px solid #009ac5;outline-offset:4px}
 @media(max-width:700px){.recordings-panel{padding:22px 18px}.recordings-head{align-items:flex-start;flex-direction:column;gap:16px}.recordings-head h3{font-size:25px}.recordings-grid{grid-template-columns:1fr}.recording-card{padding:22px}.schedule-change{padding:18px 14px;gap:14px;align-items:flex-start}.schedule-change strong{font-size:16px}footer a[href="https://he02.tci-thaijo.org/index.php/jhcp"],footer a[href="https://www.med-tu.org/GCP_HSP/"]{font-size:15px!important;padding:14px 16px}}
 @media(prefers-reduced-motion:reduce){.recording-card,footer a{transition:none!important}}
+
+.leadership-credit{max-width:960px;margin:28px auto 0;padding:0 12px;text-align:center;color:#caf0f8;font-size:clamp(14px,1.2vw,17px);font-weight:400;line-height:1.9;text-wrap:pretty}
