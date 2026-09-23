@@ -76,3 +76,5 @@ The existing GitHub Pages workflow deploys on pushes to main.
 Local changes do not update the public site until they are committed and pushed through the chosen review/release process.
 
 The six local Advisor Advanced attachments are stored under advisor-advanced-1 through advisor-advanced-6 by the group printed on the image (source filename order is reversed). Earlier advanced-* files show Co-Advisor Basic and remain separate. The orbit-edition stylesheet restores the visible Rx sphere, orbit rings and compact chair card, with rounded luminous logo frames.
+
+The hero leadership pair presents ภญ.มัลลิกา สุพล and ภญ.ประภา พิทักษา in equal-size cards. The working-group chair image was provided by the user and is stored as working-group-chair.png (original) and working-group-chair.webp (display). Both originals are accessible through their image links.

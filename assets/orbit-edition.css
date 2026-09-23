@@ -1,4 +1,5 @@
 /* Orbit edition: luminous identity, a prominent Rx scene and a compact chair card. */
+/* Leadership pair overrides are placed at the end of this stylesheet. */
 .brand-logos{padding:4px;border-radius:999px;gap:14px}
 .brand-logos img{border-radius:999px!important;border:2px solid #b7f3ff;box-shadow:0 0 0 4px #00b4d819,0 0 24px #00b4d833,inset 0 0 12px #90e0ef44;background:linear-gradient(145deg,#fff,#e7faff)}
 .brand-logos img:first-child{border-radius:50%!important;padding:6px}
@@ -47,3 +48,31 @@
 @media(max-width:800px){.hero-faculty-visual .chair-feature{width:min(400px,100%);grid-template-columns:175px minmax(0,1fr)}.hero-faculty-visual .chair-caption h2{font-size:20px}}
 @media(max-width:430px){.hero-faculty-visual .chair-feature{width:100%;grid-template-columns:45% minmax(0,1fr)}.hero-faculty-visual .chair-caption{padding:14px 11px}.hero-faculty-visual .chair-caption h2{font-size:18px}.hero-faculty-visual .chair-caption p{font-size:10px}}
 @media(max-width:350px){.hero-faculty-visual .chair-caption h2{font-size:16px}.hero-faculty-visual .chair-caption p{font-size:9px}}
+
+/* Equal prominence for both chairs, with a shared luminous stage. */
+.home-page .hero-layout{min-height:650px;padding-bottom:24px}
+.home-page .hero-faculty-visual{min-height:0}
+.home-page .hero-faculty-visual .meet-team-link{margin-inline:auto;max-width:none;margin-top:10px}
+.leadership-section{position:relative;padding:8px 0 32px}
+.leadership-heading{display:flex;align-items:center;gap:20px;margin-bottom:24px}
+.leadership-heading span{flex:1;height:1px;background:linear-gradient(90deg,transparent,#90e0ef60)}
+.leadership-heading span:last-child{transform:rotate(180deg)}
+.leadership-heading p{font-size:13px;letter-spacing:.4px;color:#bdeaf6;text-align:center;margin:0}
+.leadership-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px;perspective:1200px}
+.leadership-pair .chair-feature{position:relative;display:grid;grid-template-columns:42% minmax(0,1fr);width:100%;margin:0;transform:none;overflow:hidden;border-radius:22px;border:1px solid #8feaff70;background:linear-gradient(120deg,#0b407b,#09235c);box-shadow:0 18px 45px #00042d60,0 0 28px #00b4d818,inset 0 1px #c9faff50;transition:transform .3s,box-shadow .3s}
+.leadership-pair .chair-feature:hover{box-shadow:0 22px 55px #00042d80,0 0 35px #00b4d833,inset 0 1px #c9faff70}
+.leadership-pair .chair-photo-link{padding:12px;background:linear-gradient(145deg,#167eb6,#0a376f);align-items:center}
+.leadership-pair .chair-photo-link img{border-radius:13px;width:100%;height:auto;aspect-ratio:940/788;object-fit:contain;box-shadow:0 7px 18px #00052d35}
+.leadership-pair .chair-photo-link>span{top:17px;right:17px;width:28px;height:28px;font-size:17px}
+.leadership-pair .chair-caption{padding:24px 20px;background:transparent}
+.leadership-pair .chair-caption>div>span{display:inline-block;font-size:12px;color:#a3f0ff;letter-spacing:.3px;border-bottom:1px solid #90e0ef45;padding-bottom:6px}
+.leadership-pair .chair-caption h2{font-size:24px;color:#fff;margin:12px 0 10px;font-weight:500;white-space:normal;line-height:1.4}
+.leadership-pair .chair-caption p{font-size:13px;line-height:1.8;color:#d0e4f3;margin:0}
+.leadership-pair .chair-caption small{display:block;font-size:10px;line-height:1.7;color:#abcfe3;margin-top:10px}
+@media(max-width:1100px){.leadership-pair{gap:20px}.leadership-pair .chair-caption{padding:18px 15px}.leadership-pair .chair-caption h2{font-size:21px}.leadership-pair .chair-caption p{font-size:12px}.leadership-pair .chair-photo-link{padding:9px}}
+@media(max-width:800px){.home-page .hero-layout{min-height:0;padding-bottom:18px}.leadership-section{padding-bottom:28px}.leadership-pair{gap:18px}.leadership-pair .chair-feature{grid-template-columns:1fr;grid-template-rows:auto 1fr}.leadership-pair .chair-photo-link{padding:10px}.leadership-pair .chair-caption{padding:19px}.leadership-pair .chair-caption h2{font-size:23px}.leadership-pair .chair-caption p{font-size:13px}.leadership-heading p{font-size:12px}.leadership-heading{gap:12px}}
+@media(max-width:540px){.leadership-pair{gap:12px}.leadership-pair .chair-feature{border-radius:16px}.leadership-pair .chair-photo-link{padding:6px}.leadership-pair .chair-photo-link img{border-radius:10px}.leadership-pair .chair-caption{padding:13px 11px}.leadership-pair .chair-caption>div>span{font-size:10px}.leadership-pair .chair-caption h2{font-size:17px;margin:9px 0}.leadership-pair .chair-caption p{font-size:11px}.leadership-pair .chair-caption small{font-size:9px}.leadership-pair .chair-photo-link>span{width:23px;height:23px;top:10px;right:10px;font-size:13px}.leadership-heading p{font-size:11px;max-width:245px}.leadership-heading{margin-bottom:18px}}
+@media(max-width:350px){.leadership-pair{gap:10px}.leadership-pair .chair-caption{padding:12px 9px}.leadership-pair .chair-caption h2{font-size:15px}.leadership-pair .chair-caption p{font-size:10px}.leadership-pair .chair-caption small{font-size:8px}}
+@media(prefers-reduced-motion:reduce){.leadership-pair .chair-feature{transition:none;transform:none}}
+
+@media(max-width:800px){.leadership-pair .chair-caption{align-items:flex-start}}
