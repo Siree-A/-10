@@ -1,0 +1,8 @@
+# Temporary Microsoft Office lock files
+~$*.docx
+~$*.xlsx
+~$*.pptx
+
+# Operating-system metadata
+.DS_Store
+Thumbs.db

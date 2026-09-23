@@ -159,7 +159,7 @@
 
     <!-- Script to Generate Galleries -->
     <script>
-        function createGallery(containerId, prefix, count) {
+        function createGallery(containerId, prefix, count, sourceOverrides = {}) {
             const container = document.getElementById(containerId);
             if (!container) return;
             
@@ -177,7 +177,7 @@
                 `;
                 
                 for(let j = i; j < i + 5 && j <= count; j++) {
-                    const imgSrc = `${prefix} (${j}).png`;
+                    const imgSrc = sourceOverrides[j] || `${prefix} (${j}).png`;
                     html += `
                         <div class="group relative rounded-2xl overflow-hidden shadow-sm hover:-translate-y-2 hover:shadow-2xl hover:ring-4 hover:ring-brand-400 bg-white aspect-[3/4] flex items-center justify-center p-2 transition-all duration-300">
                             <img src="${imgSrc}" alt="${prefix} ${j}" 
@@ -201,7 +201,7 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             createGallery('advance-gallery', 'Advance', 30);
-            createGallery('basic-gallery', 'Basic', 50);
+            createGallery('basic-gallery', 'Basic', 50, { 8: '8.jpg', 11: '11.jpg' });
         });
     </script>
 </body>
