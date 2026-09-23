@@ -1,0 +1,28 @@
+/* Shared resource links and the learning recordings panel. */
+footer a[href="https://he02.tci-thaijo.org/index.php/jhcp"],
+footer a[href="https://www.med-tu.org/GCP_HSP/"]{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 20px;border:1px solid #66d5ed66;border-radius:16px;background:linear-gradient(125deg,#125583,#14265e);color:#fff!important;font-size:17px!important;font-weight:600;line-height:1.6;box-shadow:0 8px 24px #02083222;text-decoration:none;transition:background .2s,transform .2s}
+footer a[href="https://www.med-tu.org/GCP_HSP/"]{background:linear-gradient(125deg,#173668,#14204f)}
+footer a[href="https://he02.tci-thaijo.org/index.php/jhcp"]:hover,footer a[href="https://www.med-tu.org/GCP_HSP/"]:hover{transform:translateY(-2px);border-color:#90e0ef}
+.footer-links{max-width:100%;gap:12px!important}
+.recordings-panel{padding:32px;margin:40px 0 48px;border:1px solid #dbe9f3;border-radius:28px;background:linear-gradient(135deg,#fff,#f2fbff);box-shadow:0 16px 40px #073e6810;color:#132454}
+.recordings-head{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-bottom:26px}
+.recordings-eyebrow{font-size:11px;letter-spacing:.2em;color:#0077a3;font-weight:700;margin-bottom:8px}
+.recordings-head h3{font-size:28px;font-weight:700;line-height:1.4;margin:0 0 6px}
+.recordings-head p:not(.recordings-eyebrow){font-size:15px;color:#53657b}
+.recordings-more{flex-shrink:0;padding:12px 20px;border:1px solid #b4dbea;border-radius:999px;color:#075c8c;font-weight:600;background:#fff}
+.recordings-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.recording-card{display:flex;flex-direction:column;align-items:flex-start;gap:12px;padding:24px;border:1px solid #dbe7f1;border-radius:20px;background:#fff;min-width:0;text-decoration:none;transition:transform .2s,box-shadow .2s}
+.video-recording:hover{transform:translateY(-4px);box-shadow:0 12px 26px #0c639320;border-color:#7dd4e7}
+.video-camera{display:grid;place-items:center;width:56px;height:56px;border-radius:18px;background:linear-gradient(135deg,#defaff,#a4e7f2);color:#006c9f;box-shadow:inset 0 1px 0 #fff,0 7px 16px #009ac51a}
+.video-camera svg{width:30px;height:30px}
+.recording-tag{display:grid;place-items:center;min-height:56px;color:#63758e;font-size:12px;letter-spacing:.13em;font-weight:700}
+.recording-card h4{font-size:20px;font-weight:600;line-height:1.5;margin:0}
+.recording-card p{font-size:14px;color:#586b80;line-height:1.8;margin:0 0 8px}
+.recording-action{margin-top:auto;font-weight:600;color:#0077a5;font-size:14px}
+.schedule-change{display:flex;align-items:center;gap:20px;margin-top:22px;padding:20px 24px;border-radius:18px;background:#e6f5fb;border:1px solid #c9e6f1}
+.schedule-date{flex-shrink:0;min-width:64px;font-size:30px;font-weight:700;line-height:1.2;color:#00739b;text-align:center}
+.schedule-date small{display:block;font-size:11px;font-weight:500;margin-top:5px}
+.schedule-change strong{font-size:17px;font-weight:600}.schedule-change p{margin:5px 0 0;font-size:14px;color:#456178;line-height:1.8}
+.recordings-panel a:focus-visible{outline:3px solid #009ac5;outline-offset:4px}
+@media(max-width:700px){.recordings-panel{padding:22px 18px}.recordings-head{align-items:flex-start;flex-direction:column;gap:16px}.recordings-head h3{font-size:25px}.recordings-grid{grid-template-columns:1fr}.recording-card{padding:22px}.schedule-change{padding:18px 14px;gap:14px;align-items:flex-start}.schedule-change strong{font-size:16px}footer a[href="https://he02.tci-thaijo.org/index.php/jhcp"],footer a[href="https://www.med-tu.org/GCP_HSP/"]{font-size:15px!important;padding:14px 16px}}
+@media(prefers-reduced-motion:reduce){.recording-card,footer a{transition:none!important}}

@@ -21,7 +21,7 @@
     filters.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.filter === category)));
     previous.disabled = page === 0;
     next.disabled = page === pages-1;
-    section.querySelector('#faculty-status').textContent = 'แสดง ' + (page*size+1) + '–' + Math.min((page+1)*size,matches.length) + ' จาก ' + matches.length + ' กลุ่ม';
+    section.querySelector('#faculty-status').textContent = 'แสดง ' + (page*size+1) + '–' + Math.min((page+1)*size,matches.length) + ' จาก ' + matches.length + (category === 'working-group' ? ' คน' : ' กลุ่ม');
     section.querySelector('#faculty-page').textContent = (page+1) + ' / ' + pages;
   }
   filters.forEach(button => button.addEventListener('click', () => { category=button.dataset.filter;page=0;render(); }));

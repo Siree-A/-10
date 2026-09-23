@@ -286,5 +286,65 @@
     "sourceType": "user-supplied attachment",
     "image": "assets/faculty/advisor-advanced-6.webp",
     "original": "assets/faculty/originals/advisor-advanced-6.jpg"
+  },
+  {
+    "key": "working-group-1",
+    "category": "working-group",
+    "group": 1,
+    "sourceTitle": "mg (1).jpg",
+    "image": "assets/faculty/working-group-1.webp",
+    "original": "assets/faculty/originals/working-group-1.jpg",
+    "name": "ครีม",
+    "role": "คณะทำงาน"
+  },
+  {
+    "key": "working-group-2",
+    "category": "working-group",
+    "group": 2,
+    "sourceTitle": "mg (2).jpg",
+    "image": "assets/faculty/working-group-2.webp",
+    "original": "assets/faculty/originals/working-group-2.jpg",
+    "name": "กิ๊ฟ",
+    "role": "ผู้จัดการหลักสูตร"
+  },
+  {
+    "key": "working-group-3",
+    "category": "working-group",
+    "group": 3,
+    "sourceTitle": "mg (3).jpg",
+    "image": "assets/faculty/working-group-3.webp",
+    "original": "assets/faculty/originals/working-group-3.jpg",
+    "name": "หญิง",
+    "role": "คณะทำงาน"
+  },
+  {
+    "key": "working-group-4",
+    "category": "working-group",
+    "group": 4,
+    "sourceTitle": "mg (4).jpg",
+    "image": "assets/faculty/working-group-4.webp",
+    "original": "assets/faculty/originals/working-group-4.jpg",
+    "name": "ภูมิ",
+    "role": "ผู้ประสานงาน"
+  },
+  {
+    "key": "working-group-5",
+    "category": "working-group",
+    "group": 5,
+    "sourceTitle": "mg (5).jpg",
+    "image": "assets/faculty/working-group-5.webp",
+    "original": "assets/faculty/originals/working-group-5.jpg",
+    "name": "ออมสิน",
+    "role": "คณะทำงาน"
+  },
+  {
+    "key": "working-group-6",
+    "category": "working-group",
+    "group": 6,
+    "sourceTitle": "mg (6).jpg",
+    "image": "assets/faculty/working-group-6.webp",
+    "original": "assets/faculty/originals/working-group-6.jpg",
+    "name": "กุ้ง",
+    "role": "คณะทำงาน"
   }
 ]

@@ -11,7 +11,7 @@ fs.mkdirSync(out,{recursive:true});
  const errors=[];
  page.on('pageerror',e=>errors.push(e.message));
  const manifest=JSON.parse(fs.readFileSync(path.join(root,'faculty.json'),'utf8'));
- assert.equal(manifest.length,32);
+ assert.equal(manifest.length,38);
  for(const entry of manifest){assert(fs.existsSync(path.join(root,entry.image)));assert(fs.existsSync(path.join(root,entry.original)));}
  for(const width of [320,390,768,1024,1440]){
   await page.setViewportSize({width,height:1000});
@@ -21,7 +21,7 @@ fs.mkdirSync(out,{recursive:true});
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,'overflow '+width);
   assert.equal(await page.locator('.chair-photo-link img').evaluateAll(imgs=>imgs.length===2&&imgs.every(i=>i.complete&&i.naturalWidth>0)),true);
   if(width===1440 || width===390)await page.screenshot({path:path.join(out,'faculty-home-'+width+'.png')});
-  for(const [category,count] of [['advisor-basic',10],['advisor-advanced',6],['co-basic',10],['co-advanced',6]]){
+  for(const [category,count] of [['advisor-basic',10],['advisor-advanced',6],['co-basic',10],['co-advanced',6],['working-group',6]]){
    await page.locator('[data-filter="'+category+'"]').click();
    const seen=new Set();
    while(true){
@@ -60,5 +60,5 @@ fs.mkdirSync(out,{recursive:true});
  await page.screenshot({path:path.join(out,'faculty-lightbox.png')});
  assert.deepEqual(errors,[]);
  await browser.close();
- console.log('PASS: 32 faculty images, correct category counts, all pages, 5 viewport widths, no overflow, full-size viewer, keyboard navigation, Escape and focus restoration.');
+ console.log('PASS: 38 faculty images, correct category counts, all pages, 5 viewport widths, no overflow, full-size viewer, keyboard navigation, Escape and focus restoration.');
 })().catch(e=>{console.error(e);process.exit(1)});
