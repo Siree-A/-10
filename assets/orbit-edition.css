@@ -76,3 +76,10 @@
 @media(prefers-reduced-motion:reduce){.leadership-pair .chair-feature{transition:none;transform:none}}
 
 @media(max-width:800px){.leadership-pair .chair-caption{align-items:flex-start}}
+
+/* Keep the hero and the paired leaders on one balanced visual stage. */
+.home-page .hero-layout{min-height:610px;padding-top:42px;padding-bottom:16px}
+.home-page .leadership-section{padding-top:0;padding-bottom:28px}
+.home-page .leadership-heading{margin-bottom:20px}
+@media(min-width:1800px){.home-page .shell{width:min(1440px,calc(100% - 112px))}.home-page .hero-layout{gap:90px}.home-page .hero h1{font-size:58px}.home-page .hero-description{font-size:18px}.home-page .hero-faculty-visual .orbital-scene{max-width:600px;margin-inline:auto}.leadership-pair .chair-feature{grid-template-columns:40% minmax(0,1fr)}}
+@media(max-width:800px){.home-page .hero-layout{min-height:0;padding-top:32px;padding-bottom:14px}}
