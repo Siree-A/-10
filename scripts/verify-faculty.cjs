@@ -19,7 +19,7 @@ fs.mkdirSync(out,{recursive:true});
   await page.waitForSelector('.faculty-filters:not([hidden])');
   await page.evaluate(()=>document.fonts.ready);
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,'overflow '+width);
-  assert.equal(await page.locator('.chair-photo-link img').evaluateAll(imgs=>imgs.length===2&&imgs.every(i=>i.complete&&i.naturalWidth>0)),true);
+  assert.equal(await page.locator('.chair-photo-link img').evaluateAll(imgs=>imgs.length===3&&imgs.every(i=>i.complete&&i.naturalWidth>0)),true);
   if(width===1440 || width===390)await page.screenshot({path:path.join(out,'faculty-home-'+width+'.png')});
   for(const [category,count] of [['advisor-basic',10],['advisor-advanced',6],['co-basic',10],['co-advanced',6],['working-group',6]]){
    await page.locator('[data-filter="'+category+'"]').click();

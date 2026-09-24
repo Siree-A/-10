@@ -28,3 +28,13 @@ footer a[href="https://he02.tci-thaijo.org/index.php/jhcp"]:hover,footer a[href=
 @media(prefers-reduced-motion:reduce){.recording-card,footer a{transition:none!important}}
 
 .leadership-credit{max-width:960px;margin:28px auto 0;padding:0 12px;text-align:center;color:#caf0f8;font-size:clamp(14px,1.2vw,17px);font-weight:400;line-height:1.9;text-wrap:pretty}
+/* Three course leaders: equal prominence, readable on every screen. */
+.leadership-trio{grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.leadership-trio .chair-feature{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+.leadership-trio .chair-photo-link{padding:14px}
+.leadership-trio .chair-photo-link img{aspect-ratio:752/630}
+.leadership-trio .chair-caption{padding:22px 24px;align-items:flex-start}
+.leadership-trio .chair-caption h2{font-size:24px}
+.leadership-trio .chair-caption p{font-size:14px}
+@media(max-width:1000px) and (min-width:641px){.leadership-trio{gap:14px}.leadership-trio .chair-caption{padding:16px}.leadership-trio .chair-caption h2{font-size:20px}.leadership-trio .chair-caption p{font-size:12px}}
+@media(max-width:640px){.leadership-trio{grid-template-columns:1fr;max-width:420px;margin-inline:auto;gap:22px}.leadership-trio .chair-caption{padding:20px 24px}.leadership-trio .chair-caption h2{font-size:24px}.leadership-trio .chair-caption p{font-size:14px}.leadership-trio .chair-caption>div>span{font-size:12px}.leadership-trio .chair-caption small{font-size:12px}}

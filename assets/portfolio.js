@@ -13,7 +13,7 @@
   }
   function memberCard(m) {
     return '<a class="member-card" href="' + escape(m.folderUrl) + '" target="_blank" rel="noopener noreferrer" aria-label="' + escape(m.code + ' ' + m.name + ' เปิดโฟลเดอร์ Google Drive ในแท็บใหม่') + '">' +
-      '<div class="member-photo"><img src="assets/portraits/' + m.code + '.webp" alt="' + escape(m.name) + '" loading="lazy" decoding="async" width="752" height="630"><span class="photo-fallback" hidden>' + escape(m.name) + '</span></div>' +
+      '<div class="member-photo"><img src="assets/portraits/' + m.code + '.webp?v=' + (m.imageVersion || '1') + '" alt="' + escape(m.name) + '" loading="lazy" decoding="async" width="752" height="630"><span class="photo-fallback" hidden>' + escape(m.name) + '</span></div>' +
       '<div class="member-info"><div class="member-code"><b>' + m.code + '</b><span>' + m.track + ' · กลุ่ม ' + m.group + '</span></div><h3>' + escape(m.name) + '</h3><span class="card-action">เปิดโฟลเดอร์ผลงาน <b aria-hidden="true">↗</b></span></div></a>';
   }
   function bindImageFallbacks() {
@@ -27,7 +27,7 @@
   function groupCards(track) {
     return '<div class="group-grid">' + Array.from({length:tracks[track].groups}, (_, n) => {
       const people = members.filter(m => m.track === track && m.group === n+1);
-      return '<a class="group-card" href="#' + track + '/' + (n+1) + '"><div class="group-top"><span>' + track.toUpperCase() + '</span><b>' + String(n+1).padStart(2,'0') + '</b></div><h3>กลุ่มที่ ' + (n+1) + '</h3><p>' + people.length + ' นักวิจัย · ' + people[0].code + '–' + people.at(-1).code + '</p><div class="group-previews" aria-hidden="true">' + people.map(m => '<img src="assets/portraits/' + m.code + '-thumb.webp" alt="" loading="lazy" decoding="async" width="43" height="43">').join('') + '</div><span class="card-action">รู้จักสมาชิกในกลุ่ม <b aria-hidden="true">↗</b></span></a>';
+      return '<a class="group-card" href="#' + track + '/' + (n+1) + '"><div class="group-top"><span>' + track.toUpperCase() + '</span><b>' + String(n+1).padStart(2,'0') + '</b></div><h3>กลุ่มที่ ' + (n+1) + '</h3><p>' + people.length + ' นักวิจัย · ' + people[0].code + '–' + people.at(-1).code + '</p><div class="group-previews" aria-hidden="true">' + people.map(m => '<img src="assets/portraits/' + m.code + '-thumb.webp?v=' + (m.imageVersion || '1') + '" alt="" loading="lazy" decoding="async" width="43" height="43">').join('') + '</div><span class="card-action">รู้จักสมาชิกในกลุ่ม <b aria-hidden="true">↗</b></span></a>';
     }).join('') + '</div>';
   }
   function render(moveFocus = false) {
@@ -65,7 +65,7 @@
       const response = await fetch('researchers.json', {cache:'no-cache'});
       if (!response.ok) throw new Error('Unable to load directory');
       const data = await response.json();
-      if (!Array.isArray(data) || data.length !== 78 || new Set(data.map(m => m.code)).size !== 78 || !data.every(m =>
+      if (!Array.isArray(data) || data.length !== 79 || new Set(data.map(m => m.code)).size !== 79 || !data.every(m =>
         /^[AB]\d{2}$/.test(m.code) && typeof m.name === 'string' && Object.hasOwn(tracks,m.track) && Number.isInteger(m.group) && m.group>=1 && m.group<=tracks[m.track].groups &&
         /^https:\/\/drive\.google\.com\/drive\/folders\/[A-Za-z0-9_-]+$/.test(m.folderUrl) &&
         /^(Advance|Basic) \(\d+\)\.png$/.test(m.image))) throw new Error('Invalid directory');

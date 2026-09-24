@@ -16,11 +16,12 @@ const base=process.env.SITE_URL || 'http://127.0.0.1:4173/';
   const cards=await page.locator('.leadership-pair .chair-feature').evaluateAll(els=>els.map(e=>{
    const r=e.getBoundingClientRect();return {x:r.x,y:r.y,w:r.width,h:r.height};
   }));
-  assert.equal(cards.length,2);
-  assert(Math.abs(cards[0].y-cards[1].y)<2,'Cards must share a row at '+width);
-  assert(Math.abs(cards[0].w-cards[1].w)<2,'Cards must have equal width');
-  assert(cards[1].x>=cards[0].x+cards[0].w+8,'Cards must not overlap');
-  assert(Math.abs(cards[0].h-cards[1].h)<2,'Cards must have equal height');
+  assert.equal(cards.length,3);
+  for(let i=1;i<3;i++){
+   assert(Math.abs(cards[0].w-cards[i].w)<2,'Equal widths');
+   if(width>640){assert(Math.abs(cards[0].y-cards[i].y)<2);assert(cards[i].x>=cards[i-1].x+cards[i-1].w+8);}
+   else assert(cards[i].y>=cards[i-1].y+cards[i-1].h+8);
+  }
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
   const styles=await page.locator('link[rel="stylesheet"][href^="assets/"]').evaluateAll(els=>els.map(e=>e.getAttribute('href')));
   assert(styles.length>=3 && styles.every(s=>/\?v=[a-f0-9]{12}$/.test(s)),'Styles must have content versions');
@@ -30,5 +31,5 @@ const base=process.env.SITE_URL || 'http://127.0.0.1:4173/';
   }
  }
  await browser.close();
- console.log('PASS: two aligned, equal-sized, non-overlapping chair cards at seven widths; no overflow; images decode; all local styles versioned. '+base);
+ console.log('PASS: three responsive, non-overlapping chair cards at seven widths; no overflow; images decode; all local styles versioned. '+base);
 })().catch(e=>{console.error(e);process.exit(1)});
