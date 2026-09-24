@@ -18,7 +18,9 @@ Open http://127.0.0.1:4173/ or /portfolio.html.
 - researchers.json maps stable member codes to names, original image files and verified Google Drive folder URLs.
 - Advanced: A01–A30, 30 members across 6 groups.
 - Basic: B01–B50, 50 members across 10 groups.
-- B08 and B11 have now been added by the project owner. B11 is นางสาวศุภารัตน์ พิลาลัย (บิว), Basic group 3; use the supplied Basic (11).png. Do not reuse the old 8.jpg / 11.jpg overrides: they show B09 and B13.
+- B08 and B11 have now been added by the project owner. B08 is ภญ.ขัตติยา บุญรอง (จอย), Basic group 2; B11 is นางสาวศุภารัตน์ พิลาลัย (บิว), Basic group 3; use the supplied Basic (8).png and Basic (11).png. Do not reuse the old 8.jpg / 11.jpg overrides: they show B09 and B13.
+- Confirmed name corrections are keyed by member code, so removals or insertions cannot shift later people: B07 ภญ.มธุรินทร์ วงศ์โยธา, B24 ภญ.ปริศนา วงศ์ผาคุณ, B34 ภก.วิรัตน์ พวงจันทร์, and B50 ภญ.วลัยพร แปลงมาลย์. Their supplied Basic artwork is the display reference. The attendance PDF remains an older source for B08/B11/B34/B50; do not overwrite these confirmed corrections with it.
+- B07's corrected artwork is stored as `Basic (7) corrected.png`; the original `Basic (7).png` is retained unchanged for traceability. Its optimized `assets/portraits/B07.webp` and thumbnail are generated from the corrected artwork.
 - Names and group membership come from the existing revised attendance PDF. Member codes, not display names, identify memberships.
 - drive-folders.json records the existing parent, two course folders and 16 group folders. Each group contains its individual member folders.
 - No sharing permissions were changed. New folders inherit the supplied parent folder's access.

@@ -325,10 +325,10 @@
   },
   {
     "code": "B07",
-    "name": "ภญ.มธุรินทร์ วงศ์โธา",
+    "name": "ภญ.มธุรินทร์ วงศ์โยธา",
     "track": "Basic",
     "group": 2,
-    "image": "Basic (7).png",
+    "image": "Basic (7) corrected.png",
     "folderUrl": "https://drive.google.com/drive/folders/1cbJF5lZhhGIVUNeFbXLjhTonIjekKhfX",
     "folderId": "1cbJF5lZhhGIVUNeFbXLjhTonIjekKhfX"
   },
@@ -482,7 +482,7 @@
   },
   {
     "code": "B24",
-    "name": "นางปริศนา วงศ์ผาคุณ",
+    "name": "ภญ.ปริศนา วงศ์ผาคุณ",
     "track": "Basic",
     "group": 5,
     "image": "Basic (24).png",
@@ -576,7 +576,7 @@
   },
   {
     "code": "B34",
-    "name": "ภก.อัครสุชาติ โคตรสีหา",
+    "name": "ภก.วิรัตน์ พวงจันทร์",
     "track": "Basic",
     "group": 7,
     "image": "Basic (34).png",
@@ -723,7 +723,7 @@
   },
   {
     "code": "B50",
-    "name": "ภญ.วชิราภรณ์ วิสุวรรณ",
+    "name": "ภญ.วลัยพร แปลงมาลย์",
     "track": "Basic",
     "group": 10,
     "image": "Basic (50).png",

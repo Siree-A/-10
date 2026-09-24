@@ -68,7 +68,7 @@
       if (!Array.isArray(data) || data.length !== 80 || new Set(data.map(m => m.code)).size !== 80 || !data.every(m =>
         /^[AB]\d{2}$/.test(m.code) && typeof m.name === 'string' && Object.hasOwn(tracks,m.track) && Number.isInteger(m.group) && m.group>=1 && m.group<=tracks[m.track].groups &&
         /^https:\/\/drive\.google\.com\/drive\/folders\/[A-Za-z0-9_-]+$/.test(m.folderUrl) &&
-        /^(Advance|Basic) \(\d+\)\.png$/.test(m.image))) throw new Error('Invalid directory');
+        /^(Advance|Basic) \(\d+\)(?: corrected)?\.png$/.test(m.image))) throw new Error('Invalid directory');
       members = data; ready = true; render();
     } catch {
       app.innerHTML = '<div class="empty-state" role="alert"><h3>โหลดรายชื่อไม่สำเร็จ</h3><p>ตรวจสอบการเชื่อมต่อ แล้วลองอีกครั้ง</p><button class="button" id="retry-load" type="button">ลองอีกครั้ง</button><p><a class="text-link" href="https://drive.google.com/drive/folders/1fvD9AZDzTBhdlqf7MebaH68sVqptJ_xY" target="_blank" rel="noopener">เปิดโฟลเดอร์ Portfolio ใน Google Drive ↗</a></p></div>';

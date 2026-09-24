@@ -34,6 +34,8 @@ fs.mkdirSync(out, {recursive:true});
  await page.screenshot({path:out+'/members-desktop.png',fullPage:true});
  const data=JSON.parse(fs.readFileSync(root+'/researchers.json','utf8'));
  assert.equal(data.length,80); assert.equal(new Set(data.map(m=>m.folderUrl)).size,80);
+ const correctedNames={B07:'ภญ.มธุรินทร์ วงศ์โยธา',B08:'ภญ.ขัตติยา บุญรอง',B11:'นางสาวศุภารัตน์ พิลาลัย',B24:'ภญ.ปริศนา วงศ์ผาคุณ',B34:'ภก.วิรัตน์ พวงจันทร์',B50:'ภญ.วลัยพร แปลงมาลย์'};
+ for (const [code,name] of Object.entries(correctedNames)) assert.equal(data.find(m=>m.code===code).name,name,`confirmed name ${code}`);
  for(const track of ['Advanced','Basic']){
   for(let group=1;group<=(track==='Advanced'?6:10);group++){
    await page.goto('http://127.0.0.1:4173/portfolio.html#'+track+'/'+group);
