@@ -17,8 +17,8 @@ Open http://127.0.0.1:4173/ or /portfolio.html.
 
 - researchers.json maps stable member codes to names, original image files and verified Google Drive folder URLs.
 - Advanced: A01–A30, 30 members across 6 groups.
-- Basic: B01–B50 excluding B08 and B11, 48 members across 10 groups.
-- B08 and B11 were explicitly excluded by the project owner because these places have no students. Do not reuse the old 8.jpg / 11.jpg overrides: they show B09 and B13.
+- Basic: B01–B50, 50 members across 10 groups.
+- B08 and B11 have now been added by the project owner. B11 is นางสาวศุภารัตน์ พิลาลัย (บิว), Basic group 3; use the supplied Basic (11).png. Do not reuse the old 8.jpg / 11.jpg overrides: they show B09 and B13.
 - Names and group membership come from the existing revised attendance PDF. Member codes, not display names, identify memberships.
 - drive-folders.json records the existing parent, two course folders and 16 group folders. Each group contains its individual member folders.
 - No sharing permissions were changed. New folders inherit the supplied parent folder's access.
@@ -33,7 +33,7 @@ Portfolio routes use URL fragments, so deep links and browser Back/Forward work 
 - portfolio.html#Advanced
 - portfolio.html#Basic/2
 
-Search is scoped to the current level/group; the landing view searches all 78 members.
+Search is scoped to the current level/group; the landing view searches all 80 members.
 External member links use real anchors, open in a new tab, and use noopener/noreferrer.
 Directory load failures show a retry action and the root Drive link.
 CSS 3D uses transform-based motion. Animations pause when the scene is offscreen or the tab is hidden.
@@ -53,7 +53,7 @@ The script resolves the installed playwright package. If it is installed outside
 set PLAYWRIGHT_MODULE to its absolute module directory.
 Screenshots go to the ignored test-results directory.
 
-Checks cover 78 unique links, all 16 groups, original/optimized images, omitted codes,
+Checks cover 80 unique links, all 16 groups, original/optimized images, omitted codes,
 search and empty states, route history, invalid routes, network failure/retry,
 mobile navigation, viewport overflow, reduced motion, the video anchor and JavaScript errors.
 Drive folders were separately read back through Google Drive and matched by ID, name and containing group.

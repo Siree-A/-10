@@ -65,7 +65,7 @@
       const response = await fetch('researchers.json', {cache:'no-cache'});
       if (!response.ok) throw new Error('Unable to load directory');
       const data = await response.json();
-      if (!Array.isArray(data) || data.length !== 79 || new Set(data.map(m => m.code)).size !== 79 || !data.every(m =>
+      if (!Array.isArray(data) || data.length !== 80 || new Set(data.map(m => m.code)).size !== 80 || !data.every(m =>
         /^[AB]\d{2}$/.test(m.code) && typeof m.name === 'string' && Object.hasOwn(tracks,m.track) && Number.isInteger(m.group) && m.group>=1 && m.group<=tracks[m.track].groups &&
         /^https:\/\/drive\.google\.com\/drive\/folders\/[A-Za-z0-9_-]+$/.test(m.folderUrl) &&
         /^(Advance|Basic) \(\d+\)\.png$/.test(m.image))) throw new Error('Invalid directory');

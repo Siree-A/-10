@@ -33,7 +33,7 @@ fs.mkdirSync(out, {recursive:true});
  await page.evaluate(()=>scrollTo({top:0,behavior:'instant'}));
  await page.screenshot({path:out+'/members-desktop.png',fullPage:true});
  const data=JSON.parse(fs.readFileSync(root+'/researchers.json','utf8'));
- assert.equal(data.length,79); assert.equal(new Set(data.map(m=>m.folderUrl)).size,79);
+ assert.equal(data.length,80); assert.equal(new Set(data.map(m=>m.folderUrl)).size,80);
  for(const track of ['Advanced','Basic']){
   for(let group=1;group<=(track==='Advanced'?6:10);group++){
    await page.goto('http://127.0.0.1:4173/portfolio.html#'+track+'/'+group);
@@ -55,6 +55,9 @@ fs.mkdirSync(out, {recursive:true});
  await count('.member-card',1);
  assert.equal(await page.locator('.member-code b').textContent(),'A12');
  await page.locator('#member-search').fill('B11');
+ await count('.member-card',1);
+ assert.equal(await page.locator('.member-code b').textContent(),'B11');
+ await page.locator('#member-search').fill('no-such-researcher');
  await count('.member-card',0);
  await page.getByRole('button',{name:'ล้างคำค้นหา'}).click();
  await count('.track-card',2);
@@ -97,5 +100,5 @@ fs.mkdirSync(out, {recursive:true});
  await count('#videos',1);
  assert.deepEqual(errors,[]);
  await browser.close();
- console.log('PASS: 79 unique folder links; all 16 groups; image files; search; exclusions; history; invalid route; fetch failure/retry; desktop/mobile; menu; reduced motion; video anchor; no JS errors.');
+ console.log('PASS: 80 unique folder links; all 16 groups; image files; search; exclusions; history; invalid route; fetch failure/retry; desktop/mobile; menu; reduced motion; video anchor; no JS errors.');
 })().catch(e=>{console.error(e);process.exit(1)});
