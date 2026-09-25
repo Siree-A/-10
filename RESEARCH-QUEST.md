@@ -12,7 +12,10 @@ with a different question from the preceding round at each station.
 
 - `game.html` / `assets/quest.css`: accessible forms, HUD, modal feedback, responsive layout.
 - `assets/quest.js`: profiles, scoring, progress, export, round and modal state.
-- `assets/quest-data.js`: 24 original practice questions, explanations and level thresholds.
+- `assets/quest-data.js`: 64 practice questions (24 original + 40 lecture adaptations), stable IDs and level thresholds.
+- `assets/quest-lecture.js`: adapted scenarios with PDF title/page provenance; 16 questions per topic in the combined bank.
+- `assets/quest-audio.js`: original synthesized ambient music and effects; opt-in, volume controlled, suspended when paused/hidden/signed out.
+- `assets/quest-neon.css`: responsive game HUD, touch movement, minimap, settings and neon presentation.
 - `assets/quest-world.js`: real WebGL 3D geometry, character movement, click navigation,
   collisions, pickups and station interactions.
 - `assets/quest-avatar.js`: shared rounded researcher model for the world and the profile
@@ -50,13 +53,43 @@ Export downloads a readable JSON history; importing and cross-device sync are no
 
 ## Accessibility and performance
 
-Arrow keys/WASD move; E interacts. Tap the floor to walk, tap a station or use the HTML
-station list to enter a mission. The complete quiz flow is keyboard accessible without
-the canvas. Mobile uses tap controls. Dialogs support Escape and focus return.
+Arrow keys/WASD move; Shift runs, Space jumps and E interacts. Tap the floor to walk.
+Stations route the player around the reactor/desks using a half-unit grid path, then
+open the mission on arrival. The HTML station list also routes the player; an explicit
+quick-review checkbox opens questions immediately, as does the WebGL fallback.
+Touch/keyboard-accessible directional buttons release movement on pointer cancel and blur.
+Follow and overview cameras, minimap, fullscreen and graphics settings are available.
+Decorations respond with a pulse/particles or contextual message. Dialogs support Escape and focus return.
 Reduced-motion preferences remove ambient bobbing and walking bounce. Hidden/offscreen
-canvases stop their animation loop; leaving the tab pauses play. Pixel ratio is capped,
+canvases stop their animation loop; leaving the tab pauses play. World pixel ratio is capped at 1.4,
 geometry is lightweight and shared materials are cached. WebGL/module failures preserve
 the HTML mission flow. No time pressure and no health-related treatment advice.
+The skyline/windows use instancing, particles reuse a 48-point buffer, and glow uses a
+single procedural sprite texture rather than bloom/reflection passes. Auto quality switches
+to a DPR-1, no-shadow, 30-FPS target after sustained slow frames; it does not promise a
+particular frame rate on every device. Balanced caps drawing near 60 FPS; inactive scenes
+use a 30-FPS ceiling. Reduced motion removes ambient bobbing, particles and object pulses.
+
+## Teaching sources and limits (25 September 2026)
+
+Lecture scenarios were adapted from the eight PDFs supplied by the user: Validity and
+Reliability of Instrument Pharmacists; Research for gradudate level 2569 Vers 2 New;
+Statistics for Grad Students; Research Evaluation; the ethics-submission handout; the
+risk-assessment example; the disease-sequence proposal; and the Thai athletes instrument
+development article. Each adapted question records a PDF page number, shown after answering.
+Original IDs 0–23 remain original practice questions and are labeled accordingly, not
+misrepresented as lecturer-authored questions. IDs 24–63 are new adaptations.
+
+Both supplied Google Forms currently redirect to closedform, and Drive retrieval returned
+403. Their question content has NOT been incorporated or claimed as a source. A readable
+export of the original pre-tests is still needed to fulfill that part of the request.
+The YouTube reference was inspected around 9:57 and 10:22: neon city, immersive camera and
+atmospheric lighting inspired the lab district; its assets/code/audio were not copied.
+
+No original PDFs, respondent data or student records are uploaded as part of the game.
+New rounds prefer questions absent from the last 200 history events, then avoid the immediately
+preceding round when that pool is exhausted. The existing localStorage v1 schema and IDs
+are preserved. XP remains optional recreational practice, not an academic grade.
 
 ## Verification and release
 
@@ -66,6 +99,8 @@ The script covers rendered WebGL, actual keyboard pickup, answers/combos/round r
 reload, separate profiles, name escaping, export, corruption, blocked storage, responsive
 navigation and module-failure fallback. It uses synthetic students and ignored screenshots.
 Run the existing `node scripts/verify.cjs` for navigation/Portfolio regressions.
+Run `node scripts/verify-neon.cjs` for the 64-question source contract, real station
+pathfinding, audio context suspension, graphics selection and mobile movement release.
 Before publishing, run `python scripts/version-assets.py`.
 
 There is no build command or backend migration. Deployment is the existing GitHub Pages

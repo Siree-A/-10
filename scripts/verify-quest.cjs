@@ -24,6 +24,7 @@ fs.mkdirSync('test-results',{recursive:true});
  await page.locator('#pause').click();assert.equal(await page.locator('#pause-overlay').isVisible(),true);
  assert.equal(await page.locator('.station-button:disabled').count(),4);
  await page.locator('#resume').click();
+ await page.locator('.game-settings summary').click();await page.locator('#quick-mode').check();
  // Correct responses from the authored bank, using the shuffled answer identifiers.
  for(let i=0;i<4;i++){
   await page.locator('.station-button').nth(i).click();
@@ -44,6 +45,7 @@ fs.mkdirSync('test-results',{recursive:true});
  await page.reload();await page.locator('#student-id').fill('b08');await page.locator('#student-name').fill('นักวิจัย ทดสอบ');await page.locator('#login-form button').click();
  assert.equal(await page.locator('#xp').textContent(),'255 XP');
  assert.equal(await page.locator('.station-button:disabled').count(),4);
+ await page.locator('.game-settings summary').click();await page.locator('#quick-mode').check();
  await page.locator('#new-round').click();
  assert.equal(await page.locator('#round').textContent(),'รอบที่ 2');
  const second=await page.evaluate(()=>JSON.parse(localStorage.getItem(Object.keys(localStorage).find(k=>k.startsWith('research10.quest')))));
@@ -72,7 +74,7 @@ fs.mkdirSync('test-results',{recursive:true});
  await page.screenshot({path:'test-results/quest-mobile.png',fullPage:true});
  assert.deepEqual(errors,[]);
  // Failed WebGL/module initialization preserves the full learning game.
- const fallback=await context.newPage();await fallback.route('**/quest-world.js',r=>r.abort());await fallback.goto(base+'/game.html');
+ const fallback=await context.newPage();await fallback.route('**/quest-world.js*',r=>r.abort());await fallback.goto(base+'/game.html');
  await fallback.locator('#student-id').fill('T01');await fallback.locator('#student-name').fill('Fallback');await fallback.locator('#login-form button').click();
  await fallback.locator('.station-button').first().click();assert.equal(await fallback.locator('#challenge').isVisible(),true);
  // Corrupt saved records are never silently overwritten.
@@ -87,7 +89,7 @@ fs.mkdirSync('test-results',{recursive:true});
  await memory.goto(base+'/game.html');await memory.locator('#student-id').fill('TMP');await memory.locator('#student-name').fill('Temporary');await memory.locator('#login-form button').click();
  assert.equal(await memory.locator('#profile-card').isVisible(),true);
  assert.match(await memory.locator('#save-status').textContent(),/บันทึกในเครื่องไม่ได้/);
- await memory.locator('.station-button').first().click();await memory.locator('.answer').first().click();assert.equal(await memory.locator('#feedback').isVisible(),true);
+ await memory.locator('.game-settings summary').click();await memory.locator('#quick-mode').check();await memory.locator('.station-button').first().click();await memory.locator('.answer').first().click();assert.equal(await memory.locator('#feedback').isVisible(),true);
  await blocked.close();
  for(const route of ['index.html','portfolio.html','documents.html']){
   await page.goto(base+'/'+route);assert.ok(await page.locator('a[href="game.html"]').count(),`navigation on ${route}`);

@@ -1,9 +1,11 @@
-import { topics, questions, levelOf, floorXP, titles } from './quest-data.js';
+import { topics, questions, levelOf, floorXP, titles } from './quest-data.js?v=20260925-2';
+import { createSoundtrack } from './quest-audio.js?v=20260925-2';
 
 const $ = id => document.getElementById(id);
 const PREFIX = 'research10.quest.v1.';
 let player = null, playerKey = '', paused = false, scene = null, currentQuestion = null, answered = false;
-let audioContext, sound = false, toastTimer, portrait;
+let sound = false, toastTimer, portrait, worldFailed=false;
+const soundtrack=createSoundtrack();
 const shuffle = items => {
   const result = [...items];
   for (let i = result.length - 1; i > 0; i--) {
@@ -15,7 +17,10 @@ const shuffle = items => {
 const integer = value => Number.isSafeInteger(value) && value >= 0;
 function makeRound(number = 1, previous = []) {
   return { number, questions: topics.map((_, i) => {
-    const pool = questions.filter(q => q.topic === i && !previous.includes(q.id));
+    const seen=new Set(player?.history.filter(h=>h.type==='mission').map(h=>h.detail.question)||[]);
+    const all = questions.filter(q => q.topic === i && !previous.includes(q.id));
+    const unseen=all.filter(q=>!seen.has(q.id));
+    const pool=unseen.length?unseen:all;
     return pool[Math.floor(Math.random() * pool.length)].id;
   }), done: [], crystals: [], bonus: false };
 }
@@ -52,26 +57,21 @@ function toast(message) {
   clearTimeout(toastTimer); toastTimer = setTimeout(() => $('toast').classList.remove('visible'), 3000);
 }
 function chime(success = true) {
-  if (!sound) return;
-  try {
-    audioContext ||= new (window.AudioContext || window.webkitAudioContext)();
-    audioContext.resume();
-    [0, .11, .22].forEach((delay, i) => {
-      const osc = audioContext.createOscillator(), gain = audioContext.createGain();
-      osc.type = 'sine'; osc.frequency.value = (success ? 520 : 280) * [1, 1.25, 1.5][i];
-      gain.gain.setValueAtTime(.035, audioContext.currentTime + delay);
-      gain.gain.exponentialRampToValueAtTime(.001, audioContext.currentTime + delay + .3);
-      osc.connect(gain); gain.connect(audioContext.destination);
-      osc.start(audioContext.currentTime + delay); osc.stop(audioContext.currentTime + delay + .3);
-    });
-  } catch { sound = false; $('sound').textContent = 'เสียงไม่พร้อม'; $('sound').setAttribute('aria-pressed','false'); }
+  soundtrack.effect(success?'success':'wrong');
 }
 function render() {
+  soundtrack.active(!!player&&!paused&&!document.hidden);
+  document.body.classList.toggle('is-playing',!!player);
+  $('hud-xp').textContent=player?`${player.xp} XP · LV.${levelOf(player.xp)}`:'64 ภารกิจความรู้';
+  $('hud-missions').textContent=`${player?.round.done.length||0} / 4 สถานี`;
   $('welcome').hidden = !!player; $('login-card').hidden = !!player; $('profile-card').hidden = !player;
   $('pause').disabled = !player;
+  $('fullscreen').disabled=!player;
   $('round').textContent = `รอบที่ ${player?.round.number || 1}`;
   $('round-progress').value = player?.round.done.length || 0;
   $('new-round').hidden = !player || player.round.done.length !== 4;
+  $('world-next').hidden=$('new-round').hidden;
+  $('interact').hidden=!$('world-next').hidden;
   $('round-status').textContent = player?.round.bonus ? '✓ สำรวจครบแล้ว! รับโบนัส +60 XP' : 'ทำครบ 4 สถานี รับโบนัส +60 XP';
   $('stations').replaceChildren(...topics.map((topic, i) => {
     const button = document.createElement('button');
@@ -80,7 +80,8 @@ function render() {
     button.disabled = !!player && (paused || player.round.done.includes(i));
     button.addEventListener('click', () => {
       if (!player) { $('student-id').focus(); toast('ใส่เลขที่และชื่อเพื่อเริ่มเล่น'); return; }
-      scene?.visit(i); openChallenge(i);
+      if(scene&&!worldFailed&&!$('quick-mode').checked){$('world').scrollIntoView({block:'center',behavior:'instant'});scene.visit(i);$('world').focus({preventScroll:true});}
+      else openChallenge(i);
     });
     return button;
   }));
@@ -135,7 +136,19 @@ function setPause(value) {
 }
 $('pause').addEventListener('click', () => setPause(!paused));
 $('resume').addEventListener('click', () => setPause(false));
-$('sound').addEventListener('click', () => { sound = !sound; $('sound').textContent = `เสียง: ${sound ? 'เปิด' : 'ปิด'}`; $('sound').setAttribute('aria-pressed', String(sound)); chime(); });
+$('sound').addEventListener('click', async () => { try {sound=await soundtrack.enable(!sound);$('sound').textContent=`เสียง: ${sound?'เปิด':'ปิด'}`;$('sound').setAttribute('aria-pressed',String(sound));chime();}catch{sound=false;$('sound').textContent='เสียงไม่พร้อม';$('sound').setAttribute('aria-pressed','false');} });
+$('volume').addEventListener('input',e=>soundtrack.volume(+e.target.value/100));
+$('camera-view').addEventListener('change',e=>scene?.view(e.target.value));
+$('graphics').addEventListener('change',e=>scene?.quality(e.target.value));
+$('jump').addEventListener('click',()=>scene?.jump());
+document.querySelectorAll('[data-move]').forEach(button=>{
+  const key=button.dataset.move;
+  button.addEventListener('pointerdown',e=>{e.preventDefault();button.setPointerCapture(e.pointerId);scene?.input(key,true);});
+  for(const event of ['pointerup','pointercancel','lostpointercapture'])button.addEventListener(event,()=>scene?.input(key,false));
+  button.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();scene?.input(key,true);}});
+  button.addEventListener('keyup',()=>scene?.input(key,false));button.addEventListener('blur',()=>scene?.input(key,false));
+});
+$('fullscreen').addEventListener('click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.querySelector('.world-card').requestFullscreen();}catch{toast('เบราว์เซอร์นี้ไม่รองรับเต็มจอ ใช้มุมกล้องติดตามแทนได้');}});
 $('new-round').addEventListener('click', () => {
   if (!player || paused || player.round.done.length !== 4) return;
   player.round = makeRound(player.round.number + 1, player.round.questions); save(); render(); scene?.reset();
@@ -154,6 +167,7 @@ function openChallenge(topicIndex) {
   currentQuestion = questions[player.round.questions[topicIndex]]; answered = false;
   $('question-topic').textContent = `${topics[topicIndex].short} / ${topics[topicIndex].name}`;
   $('question-title').textContent = currentQuestion.text;
+  $('question-source').hidden=true;
   $('feedback').hidden = true; $('finish-question').hidden = true;
   $('answers').replaceChildren(...shuffle(currentQuestion.options.map((text, index) => ({text,index}))).map((option, i) => {
     const button = document.createElement('button'); button.className = 'answer';
@@ -181,6 +195,9 @@ function submitAnswer(index, button) {
   const heading = document.createElement('strong'); heading.textContent = correct ? `ถูกต้อง! +${earned} XP${combo ? ` · คอมโบ ${player.streak}` : ''}` : 'ได้เรียนรู้เพิ่มแล้ว +10 XP';
   const explanation = document.createElement('span'); explanation.textContent = currentQuestion.explanation + (bonus ? ' ✦ สำรวจครบ 4 สถานี รับโบนัสรอบ +60 XP!' : '');
   $('feedback').append(heading, explanation); $('feedback').hidden = false; $('finish-question').hidden = false;
+  $('question-source').textContent=currentQuestion.source?`ดัดแปลงจาก ${currentQuestion.source.title} · หน้า ${currentQuestion.source.page} (เลขหน้า PDF)`:'โจทย์ฝึกพื้นฐานที่จัดทำสำหรับเกม ไม่ใช่ข้อสอบ pre-test ต้นฉบับ';
+  $('question-source').hidden=false;
+  if(correct)scene?.celebrate();
   chime(correct); $('finish-question').focus();
 }
 $('finish-question').addEventListener('click', () => $('challenge').close());
@@ -193,15 +210,24 @@ window.addEventListener('storage', event => {
     $('save-status').textContent = 'ข้อมูลถูกเปลี่ยนจากแท็บอื่น กรุณาใส่เลขที่และชื่ออีกครั้งเพื่ออ่านความก้าวหน้าล่าสุด';
   }
 });
-document.addEventListener('visibilitychange', () => { if (document.hidden) { scene?.stop(); if (player && !$('challenge').open) setPause(true); } });
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) { soundtrack.active(false);scene?.stop(); if (player && !$('challenge').open) setPause(true); }
+  else soundtrack.active(!!player&&!paused);
+});
+$('world-next').addEventListener('click',()=>$('new-round').click());
 window.addEventListener('blur', () => scene?.stop());
 render();
 
 // Dynamically loaded so the learning flow remains available without WebGL.
 try {
-  const { createLab } = await import('./quest-world.js');
+  const { createLab } = await import('./quest-world.js?v=20260925-2');
   scene = createLab($('world'), {
     active: () => !!player && !paused && !$('challenge').open,
+    playing:()=>!!player,
+    inspect:toast,
+    effect:kind=>soundtrack.effect(kind),
+    quality:text=>$('quality-status').textContent=text,
+    position:(x,z)=>{$('map-player').style.left=`${(x+11.5)/23*100}%`;$('map-player').style.top=`${(z+8.5)/17*100}%`;},
     open: openChallenge,
     collect: id => {
       if (!player || paused || player.round.crystals.includes(id)) return;
@@ -211,9 +237,9 @@ try {
     nearby: index => {
       const available = player && !paused && index !== null && !player.round.done.includes(index);
       $('interact').disabled = !available;
-      $('interact').textContent = available ? `E · ${topics[index].name}` : 'เลือกสถานีด้านขวา →';
+      $('interact').textContent = available ? `E · ${topics[index].name}` : 'เดินไปใกล้สถานี';
     },
-    failed: () => { $('world-loading').hidden = false; $('world-loading').textContent = 'ภาพ 3 มิติหยุดทำงาน รีโหลดหน้าเพื่อลองใหม่ หรือเล่นผ่านรายการสถานีได้'; }
+    failed: () => { worldFailed=true;$('world-loading').hidden = false; $('world-loading').textContent = 'ภาพ 3 มิติหยุดทำงาน รีโหลดหน้าเพื่อลองใหม่ หรือเล่นผ่านรายการสถานีได้'; }
   });
   $('world-loading').hidden = true;
   if (player) scene.sync(player.round);
@@ -224,7 +250,7 @@ try {
 
 // The portrait is optional: a failed portrait never disables the world or quizzes.
 try {
-  const { createPortrait } = await import('./quest-avatar.js');
+  const { createPortrait } = await import('./quest-avatar.js?v=20260925-2');
   portrait = createPortrait($('avatar-preview'), () => !!player && !paused && !$('challenge').open);
   if (player) portrait.wave();
 } catch {

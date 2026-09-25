@@ -1,17 +1,18 @@
 import * as THREE from './vendor/three.module.min.js';
-import { topics } from './quest-data.js';
-import { createResearcher } from './quest-avatar.js';
+import { topics } from './quest-data.js?v=20260925-2';
+import { createResearcher } from './quest-avatar.js?v=20260925-2';
 
 export function createLab(container, hooks) {
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true, powerPreference:'low-power'});
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.6));
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.4));
   renderer.setClearColor(0x0a122b, 0);
   renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   container.append(renderer.domElement);
   renderer.domElement.setAttribute('aria-hidden','true');
-  const scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(42,1,.1,150);
+  const scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(48,1,.1,120);
+  scene.background=new THREE.Color(0x080e23);scene.fog=new THREE.FogExp2(0x080e23,.022);
   camera.position.set(0,25,30); camera.lookAt(0,0,0);
   scene.add(new THREE.HemisphereLight(0xc9eaff,0x414471,2.6));
   const sun = new THREE.DirectionalLight(0xd7edff,3); sun.position.set(-10,18,8); sun.castShadow=true;
@@ -31,6 +32,21 @@ export function createLab(container, hooks) {
   const cyl = (rt,rb,h,color,parent,x=0,y=0,z=0,glow=false) => mesh(new THREE.CylinderGeometry(rt,rb,h,32),color,parent,x,y,z,glow);
   const sphere = (r,color,parent,x=0,y=0,z=0) => mesh(new THREE.SphereGeometry(r,20,14),color,parent,x,y,z);
   const island = new THREE.Group(); scene.add(island);
+  // A small instanced skyline creates depth without a postprocessing pipeline.
+  const skyline=new THREE.InstancedMesh(new THREE.BoxGeometry(1,1,1),mat(0x111d37),36);
+  const windows=new THREE.InstancedMesh(new THREE.BoxGeometry(1,1,1),mat(0x66d8ee,true),216);
+  const dummy=new THREE.Object3D();let wi=0;
+  for(let i=0;i<36;i++){
+    const side=i%4,j=Math.floor(i/4),h=5+(i*7%13),x=side<2?(side===0?-19:19):(-25+j*6),z=side<2?(-25+j*6):(side===2?-21:22);
+    dummy.position.set(x,h/2-3,z);dummy.scale.set(3.2,h,3.2);dummy.updateMatrix();skyline.setMatrixAt(i,dummy.matrix);
+    for(let k=0;k<6;k++){dummy.position.set(x+(side<2?(side===0?1.63:-1.63):((k%2)-.5)*1.4),k*.95-.5,z+(side<2?((k%2)-.5)*1.4:(side===2?1.63:-1.63)));dummy.scale.set(side<2?.035:.55,.32,side<2?.55:.035);dummy.updateMatrix();windows.setMatrixAt(wi++,dummy.matrix);windows.setColorAt(wi-1,new THREE.Color(i%3?0x39bad4:0xe879c4));}
+  }
+  scene.add(skyline,windows);
+  const glowCanvas=document.createElement('canvas');glowCanvas.width=glowCanvas.height=64;
+  const gc=glowCanvas.getContext('2d'),gradient=gc.createRadialGradient(32,32,0,32,32,32);
+  gradient.addColorStop(0,'#ffffffb0');gradient.addColorStop(.25,'#ffffff30');gradient.addColorStop(1,'#ffffff00');gc.fillStyle=gradient;gc.fillRect(0,0,64,64);
+  const glowTexture=new THREE.CanvasTexture(glowCanvas);
+  function glow(parent,color,x,y,z,size){const s=new THREE.Sprite(new THREE.SpriteMaterial({map:glowTexture,color,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false}));s.position.set(x,y,z);s.scale.set(size,size,1);parent.add(s);return s;}
   box(23,.7,17,0x253b59,island,0,-.5,0); box(23.4,.14,17.4,0x4c7892,island,0,-.12,0);
   box(22.8,.16,16.8,0x182b46,island,0,0,0);
   box(20,1.1,14,0x14213b,island,0,-1.2,0);
@@ -49,6 +65,7 @@ export function createLab(container, hooks) {
   cyl(1.85,1.85,.15,0x64e4de,island,0,.46,0,true);
   cyl(1.65,1.8,.45,0x1d3253,island,0,.7,0);
   const core = mesh(new THREE.IcosahedronGeometry(.85,1),0x78f4e0,island,0,2.35,0,true);
+  core.userData.inspect='reactor';glow(island,0x4afde1,0,2.35,0,6);
   const rings = [];
   for (let i=0;i<3;i++) {
     const ring = mesh(new THREE.TorusGeometry(1.25+i*.17,.025,8,80),i===1?0x8f93ff:0x6bf2de,island,0,2.35,0,true);
@@ -85,13 +102,15 @@ export function createLab(container, hooks) {
       box(.1,.6,.1,0xffffff,group,0,2.1,.3);box(.45,.1,.1,0xffffff,group,0,2.1,.3);
     }
     const beacon=mesh(new THREE.OctahedronGeometry(.22),topic.color,group,0,3.25,0,true);beacons.push(beacon);
+    glow(group,topic.color,0,2,0,5);
     const sign=label(`0${i+1}  ${topic.short}`,topic.color);sign.position.set(0,4.1,0);group.add(sign);
     group.traverse(child=>{if(child.isMesh){child.userData.station=i;if(child!==base)stationMeshes.push(child);}});
   });
   // Small plants and satellite platforms make the island feel inhabited.
   for(const x of [-10,10]) for(const z of [-6,0,6]) {
-    cyl(.32,.25,.55,0x9bacb8,island,x,.4,z);
-    for(let j=0;j<3;j++){const leaf=mesh(new THREE.ConeGeometry(.23,.95,6),0x55af9f,island,x+(j-1)*.2,1,z);leaf.rotation.z=(j-1)*.35;}
+    const plant=new THREE.Group();plant.position.set(x,0,z);plant.userData.inspect='garden';island.add(plant);
+    cyl(.32,.25,.55,0x9bacb8,plant,0,.4,0);
+    for(let j=0;j<3;j++){const leaf=mesh(new THREE.ConeGeometry(.23,.95,6),0x55af9f,plant,(j-1)*.2,1,0);leaf.rotation.z=(j-1)*.35;leaf.userData.inspect='garden';}
   }
   const satellites=[];
   for (const [x,z,r] of [[-16,-6,2],[16,-9,2.8],[-14,12,1.3],[15,10,1.7]]) {
@@ -113,19 +132,40 @@ export function createLab(container, hooks) {
     const disc=cyl(.23,.23,.025,0x476879,island,x,.13,z);disc.castShadow=false;
   });
   let keys=new Set(),target=null,near=null,lastTime=0,frame=0,visible=true,lost=false,walk=0,lastNear='';
+  let route=[],destination=null,view='follow',quality='auto',low=false,slowFrames=0,frameCount=0,frameCost=0,stepTime=0,jumpVelocity=0,jumpHeight=0;
+  let hover=null,pulse=null,pulseUntil=0;
+  const blocked=(x,z)=>Math.hypot(x,z)<2.4||topics.some(t=>Math.abs(x-t.x)<1.85&&Math.abs(z-t.z)<1.05);
+  const marker=mesh(new THREE.TorusGeometry(.32,.025,6,24),0xffe3a2,island,0,.15,0,true);marker.rotation.x=-Math.PI/2;marker.visible=false;
+  const particleArray=new Float32Array(48*3),velocities=new Float32Array(48*3);
+  const particlesGeometry=new THREE.BufferGeometry();particlesGeometry.setAttribute('position',new THREE.BufferAttribute(particleArray,3));
+  const particles=new THREE.Points(particlesGeometry,new THREE.PointsMaterial({color:0x9cffe0,size:.11,transparent:true,depthWrite:false}));scene.add(particles);particles.visible=false;let particleLife=0;
+  function burst(x,y,z){if(reduced.matches)return;particleLife=.7;particles.visible=true;for(let i=0;i<48;i++){particleArray.set([x,y,z],i*3);velocities.set([(Math.random()-.5)*4,Math.random()*3,(Math.random()-.5)*4],i*3);}}
+  // Grid BFS routes around desks/reactor, avoiding straight-line click dead ends.
+  function navigate(x,z,station=null){
+    const snap=(v,min,max)=>Math.round(THREE.MathUtils.clamp(v,min,max)*2);
+    const sx=snap(avatar.position.x,-10,10),sz=snap(avatar.position.z,-7,7),gx=snap(x,-10,10),gz=snap(z,-7,7);
+    const key=(a,b)=>`${a},${b}`,queue=[[sx,sz]],parents=new Map([[key(sx,sz),null]]);let found=null;
+    for(let n=0;n<queue.length;n++){const [a,b]=queue[n];if(a===gx&&b===gz){found=key(a,b);break;}
+      for(const [da,db] of [[1,0],[-1,0],[0,1],[0,-1]]){const u=a+da,v=b+db,k=key(u,v);if(u<-20||u>20||v<-14||v>14||parents.has(k)||blocked(u/2,v/2))continue;parents.set(k,key(a,b));queue.push([u,v]);}}
+    if(!found){hooks.inspect('เลือกจุดบนทางเดินที่ว่าง แล้วลองอีกครั้ง');return;}
+    route=[];while(parents.get(found)!==null){const [a,b]=found.split(',').map(Number);route.unshift(new THREE.Vector3(a/2,0,b/2));found=parents.get(found);}
+    keys.clear();target=route.shift()||null;destination=station;marker.position.set(gx/2,.15,gz/2);marker.visible=true;
+  }
   const raycaster=new THREE.Raycaster(), pointer=new THREE.Vector2(), plane=new THREE.Plane(new THREE.Vector3(0,1,0),0);
-  const stop=()=>{keys.clear();target=null;};
+  const stop=()=>{keys.clear();target=null;route=[];destination=null;marker.visible=false;};
   const nearest=()=>{
     let best=null,distance=3.8;
     topics.forEach((t,i)=>{const d=Math.hypot(avatar.position.x-t.x,avatar.position.z-t.z);if(d<distance){distance=d;best=i;}});
     return best;
   };
   const sync=round=>{crystals.forEach((c,i)=>c.visible=!round.crystals.includes(i));beacons.forEach((b,i)=>b.visible=!round.done.includes(i));lastNear='';};
-  const visit=i=>{avatar.position.set(topics[i].x,.1,topics[i].z+2.9);stop();draw(performance.now());};
+  const visit=i=>{navigate(topics[i].x,topics[i].z+2.3,i);hooks.inspect(`กำลังเดินไป ${topics[i].name} · กดปุ่มเดินเพื่อเปลี่ยนเส้นทาง`);};
+  function jump(){if(hooks.active()&&jumpHeight===0)jumpVelocity=4;}
   container.addEventListener('keydown',e=>{
     if(!hooks.active())return;
     const key=e.key.toLowerCase();
-    if(['w','a','s','d','arrowup','arrowdown','arrowleft','arrowright'].includes(key)){e.preventDefault();keys.add(key);target=null;}
+    if(['w','a','s','d','arrowup','arrowdown','arrowleft','arrowright','shift'].includes(key)){e.preventDefault();target=null;route=[];destination=null;marker.visible=false;keys.add(key);}
+    if(key===' '){e.preventDefault();if(!e.repeat)jump();}
     if(key==='e'&&!e.repeat){e.preventDefault();const i=nearest();if(i!==null)hooks.open(i);}
     if(key==='escape')stop();
   });
@@ -137,8 +177,23 @@ export function createLab(container, hooks) {
     const bounds=container.getBoundingClientRect();pointer.set((e.clientX-bounds.left)/bounds.width*2-1,-(e.clientY-bounds.top)/bounds.height*2+1);
     raycaster.setFromCamera(pointer,camera);
     const hit=raycaster.intersectObjects(stationMeshes)[0];
-    if(hit){const index=hit.object.userData.station;visit(index);hooks.open(index);return;}
-    const point=new THREE.Vector3();if(raycaster.ray.intersectPlane(plane,point)){target=point;target.x=THREE.MathUtils.clamp(target.x,-10.4,10.4);target.z=THREE.MathUtils.clamp(target.z,-7.4,7.4);}
+    if(hit){const index=hit.object.userData.station;burst(hit.point.x,hit.point.y,hit.point.z);if(nearest()===index)hooks.open(index);else visit(index);return;}
+    const objectHit=raycaster.intersectObjects(island.children,true).find(h=>h.object!==marker&&h.object!==playerRing&&!h.object.isSprite);
+    if(objectHit&&objectHit.point.y>.3){
+      let object=objectHit.object;burst(objectHit.point.x,objectHit.point.y,objectHit.point.z);
+      if(pulse)pulse.scale.copy(pulse.userData.originalScale);pulse=object;pulse.userData.originalScale=object.scale.clone();pulseUntil=performance.now()+450;
+      if(object.userData.inspect==='reactor'){rings.forEach(r=>r.rotation.y+=.5);hooks.inspect('แกนพลังความรู้ ✦ ทำภารกิจครบ 4 สถานี เพื่อรับโบนัสและเริ่มการสำรวจรอบใหม่');}
+      else if(object.userData.inspect==='garden')hooks.inspect('สวนพักสายตา 🌱 พักสักนิด แล้วค่อยกลับไปค้นพบสิ่งใหม่');
+      else if(object.userData.id!==undefined)navigate(object.position.x,object.position.z);
+      else {hooks.inspect('ค้นพบอุปกรณ์ในเมืองแล็บ ✦ แตะโต๊ะสีเพื่อเดินไปทำภารกิจ');}
+      hooks.effect('inspect');return;
+    }
+    const point=new THREE.Vector3();if(raycaster.ray.intersectPlane(plane,point))navigate(point.x,point.z);
+  });
+  container.addEventListener('pointermove',e=>{
+    if(e.pointerType==='touch'||!hooks.active())return;
+    const b=container.getBoundingClientRect();pointer.set((e.clientX-b.left)/b.width*2-1,-(e.clientY-b.top)/b.height*2+1);raycaster.setFromCamera(pointer,camera);
+    const h=raycaster.intersectObjects(stationMeshes)[0];hover=h?.object.userData.station??null;container.style.cursor=h?'pointer':'crosshair';
   });
   function draw(time){
     const dt=Math.min((time-lastTime)/1000,.035)||0;lastTime=time;
@@ -147,21 +202,30 @@ export function createLab(container, hooks) {
     if(active){
       dx=(keys.has('d')||keys.has('arrowright')?1:0)-(keys.has('a')||keys.has('arrowleft')?1:0);
       dz=(keys.has('s')||keys.has('arrowdown')?1:0)-(keys.has('w')||keys.has('arrowup')?1:0);
-      if(target){dx=target.x-avatar.position.x;dz=target.z-avatar.position.z;if(Math.hypot(dx,dz)<.15){target=null;dx=dz=0;}}
+      if(target){dx=target.x-avatar.position.x;dz=target.z-avatar.position.z;if(Math.hypot(dx,dz)<.18){target=route.shift()||null;dx=dz=0;if(!target){marker.visible=false;const arrive=destination;destination=null;if(arrive!==null)hooks.open(arrive);}}}
       const length=Math.hypot(dx,dz);
       if(length>0){
-        const speed=dt*5;dx/=length;dz/=length;
+        const speed=dt*(keys.has('shift')?7.5:5);dx/=length;dz/=length;
         const nx=THREE.MathUtils.clamp(avatar.position.x+dx*speed,-10.4,10.4),nz=THREE.MathUtils.clamp(avatar.position.z+dz*speed,-7.4,7.4);
-        const blocked=(x,z)=>Math.hypot(x,z)<2.4||topics.some(t=>Math.abs(x-t.x)<1.85&&Math.abs(z-t.z)<1.05);
         if(!blocked(nx,nz)){avatar.position.x=nx;avatar.position.z=nz;}
         else if(!blocked(nx,avatar.position.z)){avatar.position.x=nx;}
         else if(!blocked(avatar.position.x,nz)){avatar.position.z=nz;}
         else target=null;
         avatar.rotation.y=Math.atan2(dx,dz);walk+=dt*12;
+        stepTime+=dt;if(stepTime>.35){stepTime=0;hooks.effect('step');}
       }
-      crystals.forEach(c=>{if(c.visible&&Math.hypot(c.position.x-avatar.position.x,c.position.z-avatar.position.z)<.75){c.visible=false;hooks.collect(c.userData.id);}});
+      crystals.forEach(c=>{if(c.visible&&Math.hypot(c.position.x-avatar.position.x,c.position.z-avatar.position.z)<.75){c.visible=false;burst(c.position.x,c.position.y,c.position.z);hooks.collect(c.userData.id);}});
+      if(jumpHeight>0||jumpVelocity>0){jumpVelocity-=dt*10;jumpHeight=Math.max(0,jumpHeight+jumpVelocity*dt);if(jumpHeight===0)jumpVelocity=0;}avatar.position.y=.1+jumpHeight;
     }
     if(active) character.update(time,Math.hypot(dx,dz)>0,reduced.matches);
+    if(pulse){if(time<pulseUntil&&!reduced.matches)pulse.scale.copy(pulse.userData.originalScale).multiplyScalar(1+Math.sin((pulseUntil-time)/450*Math.PI)*.14);else{pulse.scale.copy(pulse.userData.originalScale);pulse=null;}}
+    if(particleLife>0&&active){particleLife-=dt;particles.material.opacity=Math.max(0,particleLife/.7);for(let i=0;i<144;i+=3){particleArray[i]+=velocities[i]*dt;particleArray[i+1]+=velocities[i+1]*dt;particleArray[i+2]+=velocities[i+2]*dt;velocities[i+1]-=dt*4;}particlesGeometry.attributes.position.needsUpdate=true;if(particleLife<=0)particles.visible=false;}
+    stationGroups.forEach((g,i)=>beacons[i].scale.setScalar(hover===i?1.4:1));
+    const following=view==='follow'&&hooks.playing();
+    const camTarget=following?new THREE.Vector3(avatar.position.x,8.5,avatar.position.z+10.5):new THREE.Vector3(0,25,30);
+    if(!following&&camera.aspect<1)camTarget.multiplyScalar(1.35);
+    camera.position.lerp(camTarget,reduced.matches?1:1-Math.exp(-dt*5));camera.lookAt(following?avatar.position.x:0,following?1:0,following?avatar.position.z-1.4:0);
+    if(active){container.dataset.playerX=avatar.position.x.toFixed(2);container.dataset.playerZ=avatar.position.z.toFixed(2);container.dataset.moving=String(Math.hypot(dx,dz)>0);hooks.position(avatar.position.x,avatar.position.z);}
     near=nearest();const nearState=String(near)+':'+active;
     if(lastNear!==nearState){lastNear=nearState;hooks.nearby(active?near:null);}
     if(!reduced.matches && (active || !container.closest('.world-card').querySelector('#welcome').hidden)){
@@ -173,15 +237,19 @@ export function createLab(container, hooks) {
     }
     renderer.render(scene,camera);
   }
-  function animate(time){frame=0;if(document.hidden||!visible||lost)return;draw(time);frame=requestAnimationFrame(animate);}
+  function animate(time){frame=0;if(document.hidden||!visible||lost)return;
+    const elapsed=time-lastTime;
+    if(elapsed<(low||!hooks.active()?30:15)){frame=requestAnimationFrame(animate);return;}
+    if(hooks.active()&&quality==='auto'&&!low){frameCost+=elapsed;frameCount++;if(frameCount>=180){if(frameCost/frameCount>27)slowFrames++;else slowFrames=0;if(slowFrames>=2)applyQuality(true);frameCount=0;frameCost=0;}}
+    draw(time);frame=requestAnimationFrame(animate);}
+  function applyQuality(value){low=value;renderer.setPixelRatio(Math.min(devicePixelRatio,value?1:1.4));renderer.shadowMap.enabled=!value;windows.visible=!value;container.dataset.quality=value?'low':'high';hooks.quality(value?'ประหยัด · 30 FPS':'สมดุล · สูงสุด 60 FPS');resize();}
   function wake(){if(!frame&&!document.hidden&&visible&&!lost){lastTime=performance.now();frame=requestAnimationFrame(animate);}}
   function resize(){
     const width=container.clientWidth,height=container.clientHeight;
     renderer.setSize(width,height);camera.aspect=width/height;
     // Preserve the whole island on portrait screens instead of cropping stations.
-    const distance=width/height<1?1.35:1;
-    camera.position.set(0,25*distance,30*distance);camera.fov=width/height<.72?49:42;
-    camera.lookAt(0,0,0);camera.updateProjectionMatrix();if(!lost)draw(performance.now());
+    camera.fov=width/height<.72?58:48;
+    camera.updateProjectionMatrix();if(!lost)draw(performance.now());
   }
   new ResizeObserver(resize).observe(container);
   new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;if(!visible)stop();wake();},{threshold:.01}).observe(container);
@@ -189,5 +257,8 @@ export function createLab(container, hooks) {
   renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();lost=true;stop();cancelAnimationFrame(frame);frame=0;hooks.failed();});
   renderer.domElement.addEventListener('webglcontextrestored',()=>{location.reload();});
   resize();wake();
-  return {sync,visit,stop,nearest,reset:()=>{stop();avatar.position.set(0,.1,5.8);avatar.rotation.y=0;character.wave();lastNear='';}};
+  return {sync,visit,stop,nearest,jump,celebrate:()=>burst(avatar.position.x,2,avatar.position.z),
+    input:(key,on)=>{if(on&&hooks.active()){target=null;route=[];destination=null;marker.visible=false;keys.add(key);}else keys.delete(key);},
+    view:value=>{view=value;},quality:value=>{quality=value;slowFrames=0;frameCost=0;frameCount=0;applyQuality(value==='low');},
+    reset:()=>{stop();jumpHeight=jumpVelocity=0;avatar.position.set(0,.1,5.8);avatar.rotation.y=0;character.wave();lastNear='';}};
 }
