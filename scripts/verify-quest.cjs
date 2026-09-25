@@ -8,7 +8,7 @@ fs.mkdirSync('test-results',{recursive:true});
  const context=await browser.newContext({viewport:{width:1440,height:1050}});
  const page=await context.newPage();const errors=[];
  page.on('pageerror',e=>errors.push(e.message));
- await page.goto(base+'/game.html');
+ await page.addInitScript(()=>localStorage.setItem('research10.tour.v1','done'));await page.route('**/quest-cloud-config.js*',r=>r.fulfill({contentType:'text/javascript',body:"export const cloudConfig={url:'',publishableKey:''}"}));await page.goto(base+'/game.html');
  await page.waitForFunction(()=>document.querySelector('#world canvas') || document.querySelector('#world-loading').textContent.includes('ไม่ได้'));
  assert.equal(await page.locator('#world canvas').count(),1,'3D canvas initialized');
  assert.equal(await page.locator('#world-loading').isHidden(),true,'WebGL initialization succeeded');
@@ -19,8 +19,8 @@ fs.mkdirSync('test-results',{recursive:true});
  const initial = await page.evaluate(()=>JSON.parse(localStorage.getItem(Object.keys(localStorage).find(k=>k.startsWith('research10.quest')))));
  assert.equal(initial.xp,0);
  // Walk across a crystal using keyboard; movement and persistence are real input driven.
- await page.locator('#world').focus();await page.keyboard.down('ArrowDown');await page.waitForTimeout(240);await page.keyboard.up('ArrowDown');
- await page.waitForFunction(()=>document.querySelector('#crystals').textContent==='1');
+ await page.locator('#world').focus();await page.keyboard.down('ArrowDown');
+ await page.waitForFunction(()=>document.querySelector('#crystals').textContent==='1');await page.keyboard.up('ArrowDown');
  await page.locator('#pause').click();assert.equal(await page.locator('#pause-overlay').isVisible(),true);
  assert.equal(await page.locator('.station-button:disabled').count(),4);
  await page.locator('#resume').click();
@@ -74,7 +74,7 @@ fs.mkdirSync('test-results',{recursive:true});
  await page.screenshot({path:'test-results/quest-mobile.png',fullPage:true});
  assert.deepEqual(errors,[]);
  // Failed WebGL/module initialization preserves the full learning game.
- const fallback=await context.newPage();await fallback.route('**/quest-world.js*',r=>r.abort());await fallback.goto(base+'/game.html');
+ const fallback=await context.newPage();await fallback.route('**/quest-world.js*',r=>r.abort());await fallback.addInitScript(()=>{try{localStorage.setItem('research10.tour.v1','done');}catch{}});await fallback.route('**/quest-cloud-config.js*',r=>r.fulfill({contentType:'text/javascript',body:"export const cloudConfig={url:'',publishableKey:''}"}));await fallback.goto(base+'/game.html');
  await fallback.locator('#student-id').fill('A01');await fallback.locator('#login-form button[type=submit]').click();
  await fallback.locator('.station-button').first().click();assert.equal(await fallback.locator('#challenge').isVisible(),true);
  // Corrupt saved records are never silently overwritten.
@@ -86,13 +86,13 @@ fs.mkdirSync('test-results',{recursive:true});
  // Storage denied: playable in memory, with an explicit export warning.
  const blocked=await browser.newContext({reducedMotion:'reduce'});const memory=await blocked.newPage();
  await memory.addInitScript(()=>{Storage.prototype.getItem=()=>{throw new Error('blocked')};Storage.prototype.setItem=()=>{throw new Error('blocked')};});
- await memory.goto(base+'/game.html');await memory.locator('#student-id').fill('A02');await memory.locator('#login-form button[type=submit]').click();
+ await memory.addInitScript(()=>{try{localStorage.setItem('research10.tour.v1','done');}catch{}});await memory.route('**/quest-cloud-config.js*',r=>r.fulfill({contentType:'text/javascript',body:"export const cloudConfig={url:'',publishableKey:''}"}));await memory.goto(base+'/game.html');await memory.locator('#tour-skip').click();await memory.locator('#student-id').fill('A02');await memory.locator('#login-form button[type=submit]').click();
  assert.equal(await memory.locator('#profile-card').isVisible(),true);
  assert.match(await memory.locator('#save-status').textContent(),/บันทึกในเครื่องไม่ได้/);
  await memory.locator('.game-settings summary').click();await memory.locator('#quick-mode').check();await memory.locator('.station-button').first().click();await memory.locator('.answer').first().click();assert.equal(await memory.locator('#feedback').isVisible(),true);
  await blocked.close();
  for(const route of ['index.html','portfolio.html','documents.html']){
-  await page.goto(base+'/'+route);assert.ok(await page.locator('a[href="game.html"]').count(),`navigation on ${route}`);
+  await page.addInitScript(()=>localStorage.setItem('research10.tour.v1','done'));await page.route('**/quest-cloud-config.js*',r=>r.fulfill({contentType:'text/javascript',body:"export const cloudConfig={url:'',publishableKey:''}"}));await page.goto(base+'/'+route);assert.ok(await page.locator('a[href="game.html"]').count(),`navigation on ${route}`);
   for(const width of [820,1024,1280]){await page.setViewportSize({width,height:920});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,`${route} overflow at ${width}`);}
  }
  console.log('PASS: 3D, movement, collectibles, scoring, combos, rounds, persistence, profile isolation, escaping, export, responsive navigation, fallback and corrupt saves.');

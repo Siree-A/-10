@@ -1,12 +1,13 @@
 import { topics, questions, levelOf, floorXP, titles } from './quest-data.js?v=community-1';
 import { createSoundtrack } from './quest-audio.js?v=20260925-2';
 import { dayKey, normalizeCode, ensureJournal, recordPractice } from './quest-community.js?v=community-1';
-import { createClub } from './quest-club-ui.js?v=connected-1';
+import { createClub } from './quest-club-ui.js?v=journey-1';
+import { createLibrary } from './quest-library.js?v=journey-1';
 
 const $ = id => document.getElementById(id);
 const PREFIX = 'research10.quest.v1.';
 let player = null, playerKey = '', paused = false, scene = null, currentQuestion = null, answered = false;
-let sound = false, toastTimer, portrait, worldFailed=false;
+let sound = false, toastTimer, portrait, worldFailed=false, library=null, libraryMode=false;
 const soundtrack=createSoundtrack();
 let roster=[], rosterReady=false, club=null;
 const MEMBER_PREFIX='research10.quest.member.';
@@ -21,7 +22,7 @@ const shuffle = items => {
 const integer = value => Number.isSafeInteger(value) && value >= 0;
 function makeRound(number = 1, previous = []) {
   return { number, questions: topics.map((_, i) => {
-    const seen=new Set(player?.history.filter(h=>h.type==='mission').map(h=>h.detail.question)||[]);
+    const seen=new Set([...Object.keys(player?.evidence||{}).map(Number),...(player?.history.filter(h=>h.type==='mission').map(h=>h.detail.question)||[])]);
     const all = questions.filter(q => q.topic === i && !previous.includes(q.id));
     const unseen=all.filter(q=>!seen.has(q.id));
     const pool=unseen.length?unseen:all;
@@ -91,6 +92,7 @@ async function loadRoster(){
 function updateMember(){
   const id=normalizeCode($('student-id').value);
   const member=roster.find(item=>item.code===id);$('student-name').value=member?.name||'';
+  if(member&&!$('login-online').disabled){try{const p=JSON.parse(findStored(id)?.raw||'null');$('login-online').checked=p?.cloudJoin!==false;}catch{}}
   $('student-name').readOnly=true;
   $('member-status').textContent=member?`${member.track==='Advanced'?'Advanced':'Basic'} · กลุ่ม ${member.group} · ชื่อนี้อ้างอิงจากรายชื่อเว็บไซต์`:'ยังไม่พบรหัสนี้ในรายชื่อ A01–A30 / B01–B50';
   return member;
@@ -124,7 +126,7 @@ function render() {
     });
     return button;
   }));
-  renderRanking();club?.update(player);
+  renderRanking();club?.update(player);library?.update();
   if (!player) return;
   const level = levelOf(player.xp), target = floorXP(level + 1);
   $('profile-name').textContent = player.name; $('profile-code').textContent = `RESEARCHER · ${player.id}`;
@@ -164,6 +166,7 @@ $('login-form').addEventListener('submit', event => {
   if(restored)restored.name=name;
   player = ensureJournal(restored || { version: 1, id, name, xp: 0, completed: 0, crystals: 0, bestStreak: 0, streak: 0, skills: [0,0,0,0], history: [], round: makeRound() });
   player.id=id;player.name=name;
+  player.cloudJoin=$('login-online').checked;
   paused = false; $('pause-overlay').hidden = true; $('pause').textContent = 'พักเกม';
   save(); render(); scene?.reset(); portrait?.wave(); $('world').focus({preventScroll:true});
   toast(restored ? 'ยินดีต้อนรับกลับ! ไปสำรวจต่อกัน' : 'ยินดีต้อนรับสู่ Sky Lab ✦');
@@ -207,11 +210,13 @@ $('export').addEventListener('click', () => {
   const link = document.createElement('a'); link.href = url; link.download = `research-quest-${player.id}-${new Date().toISOString().slice(0,10)}.json`;
   link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
 });
-function openChallenge(topicIndex) {
-  if (!player || paused || $('challenge').open || player.round.done.includes(topicIndex)) return;
+function openChallenge(topicIndex, selectedQuestion=null) {
+  if (!player || paused || $('challenge').open || (!selectedQuestion&&player.round.done.includes(topicIndex))) return;
   scene?.stop();
-  currentQuestion = questions[player.round.questions[topicIndex]]; answered = false;
-  $('question-topic').textContent = `${topics[topicIndex].short} / ${topics[topicIndex].name}`;
+  libraryMode=!!selectedQuestion;
+  currentQuestion = selectedQuestion||questions[player.round.questions[topicIndex]]; answered = false;
+  $('next-discovery').hidden=true;
+  $('question-topic').textContent = `ข้อ ${currentQuestion.id+1} / ${questions.length} · ${topics[topicIndex].name}${libraryMode?' · แผนที่โจทย์':''}`;
   $('question-title').textContent = currentQuestion.text;
   $('question-source').hidden=true;
   $('feedback').hidden = true; $('finish-question').hidden = true;
@@ -231,24 +236,26 @@ function submitAnswer(index, button) {
   player.bestStreak = Math.max(player.bestStreak, player.streak);
   const combo = correct ? Math.min(20, (player.streak - 1) * 5) : 0;
   const earned = correct ? 40 + combo : 10;
-  player.round.done.push(topic); player.completed++; if (correct) player.skills[topic]++;
+  if(!libraryMode)player.round.done.push(topic); player.completed++; if (correct) player.skills[topic]++;
   $('answers').querySelectorAll('button').forEach(answer => { answer.disabled = true; if (+answer.dataset.answer === currentQuestion.answer) answer.classList.add('correct'); });
   if (!correct) button.classList.add('wrong');
   let bonus = 0;
-  if (player.round.done.length === 4 && !player.round.bonus) { player.round.bonus = true; bonus = 60; }
+  if (!libraryMode&&player.round.done.length === 4 && !player.round.bonus) { player.round.bonus = true; bonus = 60; }
   reward(earned + bonus, 'mission', { question: currentQuestion.id, answer:index, correct, round: player.round.number, combo, roundBonus: bonus });
   club?.event(player,{kind:'mission',item:currentQuestion.id,answer:index});
   $('feedback').replaceChildren();
   const heading = document.createElement('strong'); heading.textContent = correct ? `ถูกต้อง! +${earned} XP${combo ? ` · คอมโบ ${player.streak}` : ''}` : 'ได้เรียนรู้เพิ่มแล้ว +10 XP';
   const explanation = document.createElement('span'); explanation.textContent = currentQuestion.explanation + (bonus ? ' ✦ สำรวจครบ 4 สถานี รับโบนัสรอบ +60 XP!' : '');
   $('feedback').append(heading, explanation); $('feedback').hidden = false; $('finish-question').hidden = false;
+  $('next-discovery').hidden=!libraryMode;
   $('question-source').textContent=currentQuestion.source?`ที่มา: ${currentQuestion.source.title} · ${currentQuestion.source.page?'หน้า '+currentQuestion.source.page+' (PDF)':currentQuestion.source.section+' ข้อ '+currentQuestion.source.question}`:'โจทย์ฝึกพื้นฐานที่จัดทำสำหรับเกม';
   $('question-source').hidden=false;
   if(correct)scene?.celebrate();
   chime(correct); $('finish-question').focus();
 }
 $('finish-question').addEventListener('click', () => $('challenge').close());
-$('challenge').addEventListener('close', () => { currentQuestion = null; scene?.stop(); $('world').focus({preventScroll:true}); });
+$('next-discovery').addEventListener('click',()=>{$('challenge').close();setTimeout(()=>library?.next(),0);});
+$('challenge').addEventListener('close', () => { if($('challenge').open)return;currentQuestion = null; scene?.stop(); $('world').focus({preventScroll:true}); });
 $('interact').addEventListener('click', () => { const near = scene?.nearest(); if (near !== undefined && near !== null) openChallenge(near); });
 window.addEventListener('storage', event => {
   if (player && (event.key === playerKey || event.key === null)) {
@@ -264,6 +271,8 @@ document.addEventListener('visibilitychange', () => {
 $('world-next').addEventListener('click',()=>$('new-round').click());
 window.addEventListener('blur', () => scene?.stop());
 club=createClub({getPlayer:()=>player,getRoster:()=>roster,pause:()=>setPause(true),save,toast});
+library=createLibrary({getPlayer:()=>player,toast,open:q=>{if(paused)setPause(false);openChallenge(q.topic,q);}});
+document.addEventListener('site-tour-open',()=>{if(player)setPause(true);});
 loadRoster();
 render();
 

@@ -3,6 +3,34 @@
 An original Thai research learning game for the existing static Research 10 website.
 Entry: `game.html`, linked after Portfolio in all three existing pages and mobile menus.
 
+## Discovery and onboarding update
+
+The four world stations are topic categories. `quest-library.js` adds a numbered atlas of
+all 124 questions, topic/new/completed filters, distinct-question progress, and a next-new
+question action in the answer dialog. Atlas answers use the same grading/reward path but
+never claim a world station or award its four-station bonus. World rounds prefer lifetime
+evidence as well as recent history so new questions remain discoverable.
+
+The login form visibly offers automatic online scoring, initially checked for a new code;
+existing explicit opt-outs are preserved. The checkbox in the ranking panel remains editable.
+Ranking refreshes every 30 seconds while visible and retries pending events on reconnect.
+Survey sharing is an editable remembered preference; only a deliberate form submission
+creates a pending reflection. Retries expire at the Bangkok date boundary rather than
+misdating yesterday's response. Existing Supabase RPCs and server grading are unchanged.
+
+`site-tour.js` and `site-tour.css` cover all four pages with a six-step first-use dialog,
+clearly labeled example click sequences, links to actual pages, session-only skip,
+persistent never-show/finished state, Escape dismissal and an always-available replay button.
+No file is uploaded by the tutorial. Portfolio searches and folder links are grounded in
+`portfolio.js`; PDF/video links are grounded in `documents.html`. Drive upload instructions
+follow https://support.google.com/drive/answer/2424368 and explain edit permissions.
+
+Acceptance: every question is reachable through next-new, atlas play preserves the world
+round, false sharing preferences survive login/reload, retries need no refresh click,
+and help can be skipped, suppressed or reopened on mobile and all four routes.
+`scripts/verify-journey.cjs` exercises these boundaries using a mocked provider, never
+production score writes. Existing game regression tests also stub cloud configuration.
+
 ## Product contract
 
 Students enter a roster member code; the website fills the canonical name automatically. They explore a 3D floating lab,
