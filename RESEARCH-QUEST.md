@@ -182,3 +182,8 @@ zoom, download and close it without leaving their current tutorial step. Skip,
 never-show, keyboard dismissal and manual replay are retained.
 Run `node scripts/verify-tour-design.cjs` for all steps, 320/390 px layouts,
 image zoom and focus restoration, dismissal and replay.
+
+The game sound button enables a locally synthesized ambient soundtrack together
+with effects; the music bus stays softer than interaction sounds, pauses when the
+game is paused or the tab is hidden, and uses the existing volume control. No
+audio files are downloaded.

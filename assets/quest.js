@@ -185,7 +185,7 @@ function setPause(value) {
 }
 $('pause').addEventListener('click', () => setPause(!paused));
 $('resume').addEventListener('click', () => setPause(false));
-$('sound').addEventListener('click', async () => { try {sound=await soundtrack.enable(!sound);$('sound').textContent=`เสียง: ${sound?'เปิด':'ปิด'}`;$('sound').setAttribute('aria-pressed',String(sound));chime();}catch{sound=false;$('sound').textContent='เสียงไม่พร้อม';$('sound').setAttribute('aria-pressed','false');} });
+ $('sound').addEventListener('click', async () => { try {sound=await soundtrack.enable(!sound);$('sound').textContent=`เพลง + เสียง: ${sound?'เปิด':'ปิด'}`;$('sound').setAttribute('aria-pressed',String(sound));chime();}catch{sound=false;$('sound').textContent='เสียงไม่พร้อม';$('sound').setAttribute('aria-pressed','false');} });
 $('volume').addEventListener('input',e=>soundtrack.volume(+e.target.value/100));
 $('camera-view').addEventListener('change',e=>scene?.view(e.target.value));
 $('graphics').addEventListener('change',e=>scene?.quality(e.target.value));
