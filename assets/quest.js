@@ -278,7 +278,7 @@ render();
 
 // Dynamically loaded so the learning flow remains available without WebGL.
 try {
-  const { createLab } = await import('./quest-world.js?v=community-1');
+  const { createLab } = await import('./quest-world.js?v=cinema-1');
   scene = createLab($('world'), {
     active: () => !!player && !paused && !$('challenge').open && !$('satisfaction').open,
     playing:()=>!!player,
@@ -309,7 +309,7 @@ try {
 
 // The portrait is optional: a failed portrait never disables the world or quizzes.
 try {
-  const { createPortrait } = await import('./quest-avatar.js?v=community-1');
+  const { createPortrait } = await import('./quest-avatar.js?v=cinema-1');
   portrait = createPortrait($('avatar-preview'), () => !!player && !paused && !$('challenge').open);
   if (player) {portrait.style(player.avatar);portrait.wave();}
 } catch {

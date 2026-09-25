@@ -5,7 +5,7 @@ const assert=require('node:assert/strict');
  const page=await browser.newPage({viewport:{width:1440,height:1000}});page.setDefaultTimeout(25000);
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.addInitScript(()=>{const Original=window.AudioContext;window.AudioContext=class extends Original{constructor(...a){super(...a);window.testAudio=this;}};});
- await page.addInitScript(()=>localStorage.setItem('research10.tour.v1','done'));await page.route('**/quest-cloud-config.js*',r=>r.fulfill({contentType:'text/javascript',body:"export const cloudConfig={url:'',publishableKey:''}"}));await page.goto('http://127.0.0.1:4173/game.html');
+ await page.addInitScript(()=>localStorage.setItem('research10.tour.v1','done'));await page.route('**/quest-cloud-config.js*',r=>r.fulfill({contentType:'text/javascript',body:"export const cloudConfig={url:'',publishableKey:''}"}));await page.goto(`${process.env.SITE_URL||'http://127.0.0.1:4173'}/game.html`);
  const bank=await page.evaluate(async()=> (await import('./assets/quest-data.js?v=20260925-2')).questions);
  assert.equal(bank.length,124);assert.equal(new Set(bank.map(q=>q.text)).size,124);
  assert.equal(bank.filter(q=>q.source).length,100);

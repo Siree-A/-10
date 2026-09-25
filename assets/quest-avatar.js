@@ -6,10 +6,11 @@ export function createResearcher() {
   root.add(body); body.add(head); head.position.y = 1.65;
   const palette = {};
   for (const [key, color] of Object.entries({coat:0xf2f8ff,skin:0xffd1ae,hair:0x253651,ink:0x172438,mint:0x60e5cf,pink:0xff91ab,sole:0x6583ad})) {
-    palette[key] = new THREE.MeshStandardMaterial({color,roughness:.42,metalness:.04});
+    palette[key] = new THREE.MeshStandardMaterial({color,roughness:key==='coat'?.72:key==='skin'?.6:.3,metalness:key==='mint'?.28:.04});
   }
+  const sphereGeometry=new THREE.SphereGeometry(1,24,18);
   function ellipsoid(parent,key,x,y,z,sx,sy,sz) {
-    const m = new THREE.Mesh(new THREE.SphereGeometry(1,24,18),palette[key]);
+    const m = new THREE.Mesh(sphereGeometry,palette[key]);
     m.position.set(x,y,z);m.scale.set(sx,sy,sz);m.castShadow=true;parent.add(m);return m;
   }
   ellipsoid(body,'coat',0,.87,0,.44,.54,.31);
@@ -69,6 +70,7 @@ export function createPortrait(container, isActive) {
   const renderer = new THREE.WebGLRenderer({alpha:true,antialias:true,powerPreference:'low-power'});
   renderer.setPixelRatio(Math.min(devicePixelRatio,1.6));renderer.setSize(280,185);
   renderer.outputColorSpace=THREE.SRGBColorSpace;
+  renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;
   renderer.domElement.setAttribute('aria-hidden','true');container.prepend(renderer.domElement);
   const scene = new THREE.Scene(), camera=new THREE.PerspectiveCamera(32,280/185,.1,30);
   camera.position.set(.3,1.7,5.5);camera.lookAt(0,1.23,0);

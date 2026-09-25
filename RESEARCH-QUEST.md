@@ -168,3 +168,17 @@ There is no frontend build step. Deployment uses the existing GitHub Pages workf
 to main. Supabase setup is a separate manual step documented in `SUPABASE-SETUP.md`.
 
 Three.js integration reference: https://threejs.org/manual/pages/installation.html
+
+## Visual update and illustrated guide (2026-09-25)
+
+The Sky Garden Lab uses a one-time generated environment map, a small canvas floor
+texture, shared avatar geometry, instanced DNA and four reusable ripple meshes.
+No bloom or per-frame reflection passes are added. Low quality hides the extra
+decoration; existing pixel-ratio caps, visibility pause and reduced-motion support remain.
+
+The six-step website tour has a responsive two-column desktop layout and stacked
+mobile layout. The supplied guide image is loaded only when users open it; they can
+zoom, download and close it without leaving their current tutorial step. Skip,
+never-show, keyboard dismissal and manual replay are retained.
+Run `node scripts/verify-tour-design.cjs` for all steps, 320/390 px layouts,
+image zoom and focus restoration, dismissal and replay.

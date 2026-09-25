@@ -1,6 +1,7 @@
 import * as THREE from './vendor/three.module.min.js';
 import { topics } from './quest-data.js?v=community-1';
-import { createResearcher } from './quest-avatar.js?v=community-1';
+import { createResearcher } from './quest-avatar.js?v=cinema-1';
+import { createAtmosphere } from './quest-atmosphere.js?v=cinema-1';
 
 export function createLab(container, hooks) {
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
@@ -9,12 +10,13 @@ export function createLab(container, hooks) {
   renderer.setClearColor(0x0a122b, 0);
   renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;
   container.append(renderer.domElement);
   renderer.domElement.setAttribute('aria-hidden','true');
   const scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(48,1,.1,120);
   scene.background=new THREE.Color(0x080e23);scene.fog=new THREE.FogExp2(0x080e23,.022);
   camera.position.set(0,25,30); camera.lookAt(0,0,0);
-  scene.add(new THREE.HemisphereLight(0xc9eaff,0x414471,2.6));
+  scene.add(new THREE.HemisphereLight(0xc9eaff,0x414471,1.8));
   const sun = new THREE.DirectionalLight(0xd7edff,3); sun.position.set(-10,18,8); sun.castShadow=true;
   sun.shadow.mapSize.set(1024,1024); Object.assign(sun.shadow.camera,{left:-18,right:18,top:18,bottom:-18});
   sun.shadow.bias=-.001; scene.add(sun);
@@ -125,6 +127,7 @@ export function createLab(container, hooks) {
   // The same expressive researcher appears here and on the player's profile.
   const character = createResearcher(), avatar = character.root;
   island.add(avatar);avatar.position.set(0,.1,5.8);
+  const atmosphere=createAtmosphere(scene,island,avatar,renderer);
   const playerRing=mesh(new THREE.TorusGeometry(.62,.035,8,40),0x7cffe2,avatar,0,.03,0,true);playerRing.rotation.x=Math.PI/2;
   const crystals=[];
   [[-3,5],[-4,2],[-4,-2],[-3,-5],[0,-6],[3,-5],[4,-2],[4,2],[3,5],[0,7],[-9,0],[9,0]].forEach(([x,z],id)=>{
@@ -133,13 +136,13 @@ export function createLab(container, hooks) {
   });
   let keys=new Set(),target=null,near=null,lastTime=0,frame=0,visible=true,lost=false,walk=0,lastNear='';
   let route=[],destination=null,view='follow',quality='auto',low=false,slowFrames=0,frameCount=0,frameCost=0,stepTime=0,jumpVelocity=0,jumpHeight=0;
-  let hover=null,pulse=null,pulseUntil=0;
+  let hover=null,pulse=null,pulseUntil=0,performanceFrames=0;
   const blocked=(x,z)=>Math.hypot(x,z)<2.4||topics.some(t=>Math.abs(x-t.x)<1.85&&Math.abs(z-t.z)<1.05);
   const marker=mesh(new THREE.TorusGeometry(.32,.025,6,24),0xffe3a2,island,0,.15,0,true);marker.rotation.x=-Math.PI/2;marker.visible=false;
   const particleArray=new Float32Array(48*3),velocities=new Float32Array(48*3);
   const particlesGeometry=new THREE.BufferGeometry();particlesGeometry.setAttribute('position',new THREE.BufferAttribute(particleArray,3));
   const particles=new THREE.Points(particlesGeometry,new THREE.PointsMaterial({color:0x9cffe0,size:.11,transparent:true,depthWrite:false}));scene.add(particles);particles.visible=false;let particleLife=0;
-  function burst(x,y,z){if(reduced.matches)return;particleLife=.7;particles.visible=true;for(let i=0;i<48;i++){particleArray.set([x,y,z],i*3);velocities.set([(Math.random()-.5)*4,Math.random()*3,(Math.random()-.5)*4],i*3);}}
+  function burst(x,y,z){if(reduced.matches)return;atmosphere.pulse(x,z,true);particleLife=.7;particles.visible=true;for(let i=0;i<48;i++){particleArray.set([x,y,z],i*3);velocities.set([(Math.random()-.5)*4,Math.random()*3,(Math.random()-.5)*4],i*3);}}
   // Grid BFS routes around desks/reactor, avoiding straight-line click dead ends.
   function navigate(x,z,station=null){
     const snap=(v,min,max)=>Math.round(THREE.MathUtils.clamp(v,min,max)*2);
@@ -196,7 +199,7 @@ export function createLab(container, hooks) {
     const h=raycaster.intersectObjects(stationMeshes)[0];hover=h?.object.userData.station??null;container.style.cursor=h?'pointer':'crosshair';
   });
   function draw(time){
-    const dt=Math.min((time-lastTime)/1000,.035)||0;lastTime=time;
+    const dt=Math.min((time-lastTime)/1000,.1)||0;lastTime=time;
     const active=hooks.active();
     let dx=0,dz=0;
     if(active){
@@ -205,14 +208,14 @@ export function createLab(container, hooks) {
       if(target){dx=target.x-avatar.position.x;dz=target.z-avatar.position.z;if(Math.hypot(dx,dz)<.18){target=route.shift()||null;dx=dz=0;if(!target){marker.visible=false;const arrive=destination;destination=null;if(arrive!==null)hooks.open(arrive);}}}
       const length=Math.hypot(dx,dz);
       if(length>0){
-        const speed=dt*(keys.has('shift')?7.5:5);dx/=length;dz/=length;
+        const stepDistance=dt*(keys.has('shift')?7.5:5),speed=target?Math.min(stepDistance,length):stepDistance;dx/=length;dz/=length;
         const nx=THREE.MathUtils.clamp(avatar.position.x+dx*speed,-10.4,10.4),nz=THREE.MathUtils.clamp(avatar.position.z+dz*speed,-7.4,7.4);
         if(!blocked(nx,nz)){avatar.position.x=nx;avatar.position.z=nz;}
         else if(!blocked(nx,avatar.position.z)){avatar.position.x=nx;}
         else if(!blocked(avatar.position.x,nz)){avatar.position.z=nz;}
         else target=null;
         avatar.rotation.y=Math.atan2(dx,dz);walk+=dt*12;
-        stepTime+=dt;if(stepTime>.35){stepTime=0;hooks.effect('step');}
+        stepTime+=dt;if(stepTime>.35){stepTime=0;hooks.effect('step');if(!reduced.matches)atmosphere.pulse(avatar.position.x,avatar.position.z);}
       }
       crystals.forEach(c=>{if(c.visible&&Math.hypot(c.position.x-avatar.position.x,c.position.z-avatar.position.z)<.75){c.visible=false;burst(c.position.x,c.position.y,c.position.z);hooks.collect(c.userData.id);}});
       if(jumpHeight>0||jumpVelocity>0){jumpVelocity-=dt*10;jumpHeight=Math.max(0,jumpHeight+jumpVelocity*dt);if(jumpHeight===0)jumpVelocity=0;}avatar.position.y=.1+jumpHeight;
@@ -235,14 +238,17 @@ export function createLab(container, hooks) {
       beacons.forEach((b,i)=>{b.rotation.y+=dt;b.position.y=3.25+Math.sin(time*.002+i)*.12;});
       satellites.forEach((s,i)=>s.position.y=-2+Math.sin(time*.0007+i)*.3);
     }
+    atmosphere.update(time,dt,!reduced.matches&&(active||!hooks.playing()));
     renderer.render(scene,camera);
+    if(++performanceFrames%30===0){container.dataset.drawCalls=renderer.info.render.calls;container.dataset.triangles=renderer.info.render.triangles;}
   }
   function animate(time){frame=0;if(document.hidden||!visible||lost)return;
     const elapsed=time-lastTime;
     if(elapsed<(low||!hooks.active()?30:15)){frame=requestAnimationFrame(animate);return;}
-    if(hooks.active()&&quality==='auto'&&!low){frameCost+=elapsed;frameCount++;if(frameCount>=180){if(frameCost/frameCount>27)slowFrames++;else slowFrames=0;if(slowFrames>=2)applyQuality(true);frameCount=0;frameCost=0;}}
+    if(hooks.active()&&quality==='auto'&&!low){frameCost+=elapsed;frameCount++;if(frameCost>=1800&&frameCount>=12){if(frameCost/frameCount>27)slowFrames++;else slowFrames=0;if(slowFrames>=2)applyQuality(true);frameCount=0;frameCost=0;}}
     draw(time);frame=requestAnimationFrame(animate);}
-  function applyQuality(value){low=value;renderer.setPixelRatio(Math.min(devicePixelRatio,value?1:1.4));renderer.shadowMap.enabled=!value;windows.visible=!value;container.dataset.quality=value?'low':'high';hooks.quality(value?'ประหยัด · 30 FPS':'สมดุล · สูงสุด 60 FPS');resize();}
+  function applyQuality(value){low=value;atmosphere.quality(value);renderer.setPixelRatio(Math.min(devicePixelRatio,value?1:1.4));renderer.shadowMap.enabled=!value;windows.visible=!value;container.dataset.quality=value?'low':'high';hooks.quality(value?'ประหยัด · 30 FPS':'สมดุล · สูงสุด 60 FPS');resize();}
+  reduced.addEventListener('change',()=>{if(reduced.matches)atmosphere.hideMotion();});
   function wake(){if(!frame&&!document.hidden&&visible&&!lost){lastTime=performance.now();frame=requestAnimationFrame(animate);}}
   function resize(){
     const width=container.clientWidth,height=container.clientHeight;
