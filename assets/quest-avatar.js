@@ -15,6 +15,18 @@ export function createResearcher() {
   ellipsoid(body,'coat',0,.87,0,.44,.54,.31);
   ellipsoid(head,'skin',0,.15,0,.59,.57,.48);
   ellipsoid(head,'hair',0,.4,-.12,.6,.39,.43);
+  const longHair=new THREE.Group();head.add(longHair);
+  ellipsoid(longHair,'hair',0,-.04,-.27,.57,.7,.34);
+  for(const side of [-1,1]){ellipsoid(longHair,'hair',side*.56,.13,-.12,.23,.24,.24);ellipsoid(longHair,'mint',side*.56,.34,-.10,.14,.07,.13);}
+  const goggles=new THREE.Group();head.add(goggles);
+  for(const side of [-1,1]){const rim=new THREE.Mesh(new THREE.TorusGeometry(.115,.018,8,20),palette.mint);rim.position.set(side*.22,.18,.49);goggles.add(rim);}
+  const bridge=new THREE.Mesh(new THREE.BoxGeometry(.19,.025,.02),palette.mint);bridge.position.set(0,.18,.5);goggles.add(bridge);
+  function style(value='neutral'){
+    longHair.visible=value==='long';goggles.visible=value==='neutral';
+    palette.mint.color.set(value==='long'?0xc595f8:value==='short'?0x60e5cf:0xffc66d);
+    root.userData.style=value;
+  }
+  style();
   // Soft side-swept fringe, ears, glossy eyes, rosy cheeks and a smile.
   for(const [x,y,s] of [[-.33,.46,.22],[-.1,.57,.24],[.17,.58,.21],[.38,.46,.17]])
     ellipsoid(head,'hair',x,y,.26,s,s*.75,.2);
@@ -50,7 +62,7 @@ export function createResearcher() {
     const blink=!reduced && t%4.6>4.4;
     eyes.forEach(eye=>eye.scale.y=blink?.016:.097);
   }
-  return {root,update,wave};
+  return {root,update,wave,style};
 }
 
 export function createPortrait(container, isActive) {
@@ -82,5 +94,5 @@ export function createPortrait(container, isActive) {
   container.addEventListener('click',()=>{if(isActive())character.wave();});
   renderer.domElement.addEventListener('webglcontextlost',event=>{event.preventDefault();lost=true;cancelAnimationFrame(frame);frame=0;renderer.domElement.hidden=true;container.querySelector('.avatar-caption').textContent='อวตาร์พักอยู่ · ยังทำภารกิจต่อได้';});
   character.update(0,false,true);renderer.render(scene,camera);
-  return {wave:()=>character.wave()};
+  return {wave:()=>character.wave(),style:character.style};
 }

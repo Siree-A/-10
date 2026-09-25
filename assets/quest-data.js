@@ -1,4 +1,5 @@
 import { lectureQuestions } from './quest-lecture.js?v=20260925-1';
+import { pretestQuestions } from './quest-pretest.js?v=community-1';
 // Keep IDs 0–23 stable so saved rounds and XP remain valid.
 export const topics = [
   { name: 'ตั้งคำถามวิจัย', short: 'QUESTION', color: '#57ead5', x: -7, z: -5, icon: '◎' },
@@ -31,7 +32,7 @@ export const questions = [
   [3, 'AI เสนอบทความอ้างอิงมา ควรทำอย่างไร?', ['คัดลอกทันที', 'ตรวจว่าบทความมีอยู่จริงและอ่านต้นฉบับว่าเกี่ยวข้อง', 'เชื่อเพราะมีชื่อผู้แต่ง'], 1, 'AI อาจสร้างแหล่งอ้างอิงที่ไม่มีจริง ผู้วิจัยต้องตรวจสอบแหล่งที่มาและข้อความที่ใช้อ้าง'],
   [3, 'บทความได้รับทุนจากบริษัทที่เกี่ยวข้อง ควรพิจารณาอย่างไร?', ['เชื่อทุกข้อสรุป', 'ตรวจการเปิดเผยผลประโยชน์ทับซ้อน วิธีวิจัย และความโปร่งใส', 'ถือว่าผิดทั้งหมดทันที'], 1, 'แหล่งทุนเป็นบริบทที่ต้องตรวจสอบร่วมกับคุณภาพวิธีวิจัย ไม่ใช่ข้อสรุปอัตโนมัติ'],
   [3, 'นำข้อความจากผลงานผู้อื่นมาใช้ ควรทำอย่างไร?', ['เปลี่ยนคำสองคำแล้วไม่ต้องอ้าง', 'สรุปด้วยความเข้าใจและอ้างอิงต้นทางอย่างเหมาะสม', 'ใส่ชื่อเราแทนผู้เขียน'], 1, 'การอ้างอิงช่วยให้ตรวจสอบที่มาและให้เครดิต การคัดคำโดยตรงต้องแสดงว่าเป็นข้อความอ้างด้วย']
-].map((q, id) => ({id, topic:q[0], text:q[1], options:q[2], answer:q[3], explanation:q[4],kind:'original'})).concat(lectureQuestions);
+].map((q, id) => ({id, topic:q[0], text:q[1], options:q[2], answer:q[3], explanation:q[4],kind:'original'})).concat(lectureQuestions,pretestQuestions);
 export const levelOf = xp => Math.floor(Math.sqrt(xp / 100)) + 1;
 export const floorXP = level => (level - 1) ** 2 * 100;
 export const titles = ['นักสำรวจความรู้', 'นักวิจัยฝึกหัด', 'นักตั้งคำถาม', 'นักวิเคราะห์', 'นักวิจัยชำนาญ', 'ผู้นำห้องแล็บ'];

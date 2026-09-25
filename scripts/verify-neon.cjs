@@ -7,11 +7,11 @@ const assert=require('node:assert/strict');
  await page.addInitScript(()=>{const Original=window.AudioContext;window.AudioContext=class extends Original{constructor(...a){super(...a);window.testAudio=this;}};});
  await page.goto('http://127.0.0.1:4173/game.html');
  const bank=await page.evaluate(async()=> (await import('./assets/quest-data.js?v=20260925-2')).questions);
- assert.equal(bank.length,64);assert.equal(new Set(bank.map(q=>q.text)).size,64);
- assert.equal(bank.filter(q=>q.source).length,40);
- for(const [i,q] of bank.entries()){assert.equal(q.id,i);assert.equal(q.options.length,3);assert.ok(q.answer>=0&&q.answer<3);assert.ok(q.explanation);if(i>=24)assert.ok(q.source.page>0&&q.source.title);}
- assert.deepEqual([0,1,2,3].map(t=>bank.filter(q=>q.topic===t).length),[16,16,16,16]);
- await page.locator('#student-id').fill('NEON');await page.locator('#student-name').fill('ทดสอบ เมืองวิจัย');await page.locator('#login-form button').click();
+ assert.equal(bank.length,124);assert.equal(new Set(bank.map(q=>q.text)).size,124);
+ assert.equal(bank.filter(q=>q.source).length,100);
+ for(const [i,q] of bank.entries()){assert.equal(q.id,i);assert.equal(q.options.length,i<64?3:4);assert.ok(q.answer>=0&&q.answer<q.options.length);assert.ok(q.explanation);if(i>=24&&i<64)assert.ok(q.source.page>0&&q.source.title);}
+ assert.equal(bank.filter(q=>q.id>=64&&q.track==='Basic').length,30);
+ await page.locator('#student-id').fill('A12');await page.locator('#login-form button[type=submit]').click();
  await page.waitForFunction(()=>document.querySelector('#world').dataset.playerZ);
  await page.locator('#sound').click();assert.equal(await page.evaluate(()=>window.testAudio.state),'running');
  await page.locator('#pause').click();await page.waitForFunction(()=>window.testAudio.state==='suspended');
@@ -42,9 +42,9 @@ const assert=require('node:assert/strict');
  await page.locator('#graphics').selectOption('high');await page.locator('#world').scrollIntoViewIfNeeded();await page.waitForTimeout(1000);await page.screenshot({path:'test-results/neon-desktop.png'});
  // Previously released v1 IDs and accumulated XP load without migration/reset.
  await page.locator('#switch-player').click();
- await page.evaluate(()=>localStorage.setItem('research10.quest.v1.LEGACY.legacy',JSON.stringify({version:1,id:'LEGACY',name:'legacy',xp:435,completed:8,crystals:3,bestStreak:3,streak:1,skills:[2,1,2,1],history:[],round:{number:3,questions:[0,6,12,18],done:[0],crystals:[2],bonus:false}})));
- await page.locator('#student-id').fill('LEGACY');await page.locator('#student-name').fill('legacy');await page.locator('#login-form button').click();
+ await page.evaluate(()=>localStorage.setItem('research10.quest.v1.B08.legacy',JSON.stringify({version:1,id:'B08',name:'legacy',xp:435,completed:8,crystals:3,bestStreak:3,streak:1,skills:[2,1,2,1],history:[],round:{number:3,questions:[0,6,12,18],done:[0],crystals:[2],bonus:false}})));
+ await page.locator('#student-id').fill('B08');await page.locator('#login-form button[type=submit]').click();
  assert.equal(await page.locator('#xp').textContent(),'435 XP');assert.equal(await page.locator('#completed').textContent(),'8');assert.equal(await page.locator('.station-button:disabled').count(),1);
- assert.deepEqual(errors,[]);console.log('PASS: 64 unique questions, 40 page citations, pathfinding to all stations, audio lifecycle, low graphics, mobile movement and legacy saves.');
+ assert.deepEqual(errors,[]);console.log('PASS: 124 unique questions, 40 page citations, pathfinding to all stations, audio lifecycle, low graphics, mobile movement and legacy saves.');
  await browser.close();
 })().catch(e=>{console.error(e);process.exit(1);});

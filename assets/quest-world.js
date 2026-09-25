@@ -1,6 +1,6 @@
 import * as THREE from './vendor/three.module.min.js';
-import { topics } from './quest-data.js?v=20260925-2';
-import { createResearcher } from './quest-avatar.js?v=20260925-2';
+import { topics } from './quest-data.js?v=community-1';
+import { createResearcher } from './quest-avatar.js?v=community-1';
 
 export function createLab(container, hooks) {
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
@@ -257,7 +257,7 @@ export function createLab(container, hooks) {
   renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();lost=true;stop();cancelAnimationFrame(frame);frame=0;hooks.failed();});
   renderer.domElement.addEventListener('webglcontextrestored',()=>{location.reload();});
   resize();wake();
-  return {sync,visit,stop,nearest,jump,celebrate:()=>burst(avatar.position.x,2,avatar.position.z),
+  return {sync,visit,stop,nearest,jump,style:character.style,celebrate:()=>burst(avatar.position.x,2,avatar.position.z),
     input:(key,on)=>{if(on&&hooks.active()){target=null;route=[];destination=null;marker.visible=false;keys.add(key);}else keys.delete(key);},
     view:value=>{view=value;},quality:value=>{quality=value;slowFrames=0;frameCost=0;frameCount=0;applyQuality(value==='low');},
     reset:()=>{stop();jumpHeight=jumpVelocity=0;avatar.position.set(0,.1,5.8);avatar.rotation.y=0;character.wave();lastNear='';}};

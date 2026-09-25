@@ -13,8 +13,8 @@ fs.mkdirSync('test-results',{recursive:true});
  assert.equal(await page.locator('#world canvas').count(),1,'3D canvas initialized');
  assert.equal(await page.locator('#world-loading').isHidden(),true,'WebGL initialization succeeded');
  await page.screenshot({path:'test-results/quest-desktop-welcome.png',fullPage:true});
- await page.locator('#student-id').fill('B08');await page.locator('#student-name').fill('นักวิจัย ทดสอบ');
- await page.locator('#login-form button').click();
+ await page.locator('#student-id').fill('B08');
+ await page.locator('#login-form button[type=submit]').click();
  await page.locator('#profile-card').waitFor({state:'visible'});
  const initial = await page.evaluate(()=>JSON.parse(localStorage.getItem(Object.keys(localStorage).find(k=>k.startsWith('research10.quest')))));
  assert.equal(initial.xp,0);
@@ -33,7 +33,7 @@ fs.mkdirSync('test-results',{recursive:true});
    return questions.find(q=>q.text===document.querySelector('#question-title').textContent).answer;
   });
   await page.locator(`.answer[data-answer="${answer}"]`).click();
-  assert.equal(await page.locator('.answer:disabled').count(),3);
+  assert.ok([3,4].includes(await page.locator('.answer:disabled').count()));
   await page.locator('#finish-question').click();
  }
  assert.equal(await page.locator('#completed').textContent(),'4');
@@ -42,7 +42,7 @@ fs.mkdirSync('test-results',{recursive:true});
  assert.equal(await page.locator('.badge.earned').count(),3);
  await page.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}));
  await page.screenshot({path:'test-results/quest-desktop-playing.png',fullPage:true});
- await page.reload();await page.locator('#student-id').fill('b08');await page.locator('#student-name').fill('นักวิจัย ทดสอบ');await page.locator('#login-form button').click();
+ await page.reload();await page.locator('#student-id').fill('b08');await page.locator('#login-form button[type=submit]').click();
  assert.equal(await page.locator('#xp').textContent(),'255 XP');
  assert.equal(await page.locator('.station-button:disabled').count(),4);
  await page.locator('.game-settings summary').click();await page.locator('#quick-mode').check();
@@ -61,7 +61,7 @@ fs.mkdirSync('test-results',{recursive:true});
  await page.locator('#finish-question').click();
  const downloadEvent=page.waitForEvent('download');await page.locator('#export').click();const download=await downloadEvent;
  await download.saveAs('test-results/quest-export.json');assert.equal(JSON.parse(fs.readFileSync('test-results/quest-export.json')).xp,265);
- await page.locator('#switch-player').click();await page.locator('#student-id').fill('B09');await page.locator('#student-name').fill('<img src=x onerror=alert(1)>');await page.locator('#login-form button').click();
+ await page.locator('#switch-player').click();await page.locator('#student-id').fill('B09');await page.locator('#login-form button[type=submit]').click();
  assert.equal(await page.locator('#xp').textContent(),'0 XP');assert.equal(await page.locator('#profile-name img').count(),0);
  for(const width of [320,390,768,820,1024,1280]){
   await page.setViewportSize({width,height:920});await page.waitForTimeout(120);
@@ -69,24 +69,24 @@ fs.mkdirSync('test-results',{recursive:true});
  }
  await page.setViewportSize({width:390,height:844});
  await page.locator('.menu-toggle').click();assert.equal(await page.locator('#primary-nav a[href="game.html"]').isVisible(),true);await page.locator('.menu-toggle').click();
- await page.locator('#switch-player').click();await page.locator('#student-id').fill('B08');await page.locator('#student-name').fill('นักวิจัย ทดสอบ');await page.locator('#login-form button').click();
+ await page.locator('#switch-player').click();await page.locator('#student-id').fill('B08');await page.locator('#login-form button[type=submit]').click();
  await page.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}));
  await page.screenshot({path:'test-results/quest-mobile.png',fullPage:true});
  assert.deepEqual(errors,[]);
  // Failed WebGL/module initialization preserves the full learning game.
  const fallback=await context.newPage();await fallback.route('**/quest-world.js*',r=>r.abort());await fallback.goto(base+'/game.html');
- await fallback.locator('#student-id').fill('T01');await fallback.locator('#student-name').fill('Fallback');await fallback.locator('#login-form button').click();
+ await fallback.locator('#student-id').fill('A01');await fallback.locator('#login-form button[type=submit]').click();
  await fallback.locator('.station-button').first().click();assert.equal(await fallback.locator('#challenge').isVisible(),true);
  // Corrupt saved records are never silently overwritten.
  await page.locator('#switch-player').click();
- await page.evaluate(()=>localStorage.setItem('research10.quest.v1.BAD.corrupt','{bad'));
- await page.locator('#student-id').fill('BAD');await page.locator('#student-name').fill('corrupt');await page.locator('#login-form button').click();
+ await page.evaluate(()=>localStorage.setItem('research10.quest.member.B10','{bad'));
+ await page.locator('#student-id').fill('B10');await page.locator('#login-form button[type=submit]').click();
  assert.equal(await page.locator('#login-error').isVisible(),true);
- assert.equal(await page.evaluate(()=>localStorage.getItem('research10.quest.v1.BAD.corrupt')),'{bad');
+ assert.equal(await page.evaluate(()=>localStorage.getItem('research10.quest.member.B10')),'{bad');
  // Storage denied: playable in memory, with an explicit export warning.
  const blocked=await browser.newContext({reducedMotion:'reduce'});const memory=await blocked.newPage();
  await memory.addInitScript(()=>{Storage.prototype.getItem=()=>{throw new Error('blocked')};Storage.prototype.setItem=()=>{throw new Error('blocked')};});
- await memory.goto(base+'/game.html');await memory.locator('#student-id').fill('TMP');await memory.locator('#student-name').fill('Temporary');await memory.locator('#login-form button').click();
+ await memory.goto(base+'/game.html');await memory.locator('#student-id').fill('A02');await memory.locator('#login-form button[type=submit]').click();
  assert.equal(await memory.locator('#profile-card').isVisible(),true);
  assert.match(await memory.locator('#save-status').textContent(),/บันทึกในเครื่องไม่ได้/);
  await memory.locator('.game-settings summary').click();await memory.locator('#quick-mode').check();await memory.locator('.station-button').first().click();await memory.locator('.answer').first().click();assert.equal(await memory.locator('#feedback').isVisible(),true);

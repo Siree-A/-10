@@ -5,15 +5,20 @@ Entry: `game.html`, linked after Portfolio in all three existing pages and mobil
 
 ## Product contract
 
-Students enter a member/student number and display name, explore a 3D floating lab,
+Students enter a roster member code; the website fills the canonical name automatically. They explore a 3D floating lab,
 collect knowledge crystals, and answer research practice questions at four stations.
 The loop has no timer or XP penalty. Completing four stations unlocks another round
 with a different question from the preceding round at each station.
 
 - `game.html` / `assets/quest.css`: accessible forms, HUD, modal feedback, responsive layout.
 - `assets/quest.js`: profiles, scoring, progress, export, round and modal state.
-- `assets/quest-data.js`: 64 practice questions (24 original + 40 lecture adaptations), stable IDs and level thresholds.
-- `assets/quest-lecture.js`: adapted scenarios with PDF title/page provenance; 16 questions per topic in the combined bank.
+- `assets/quest-data.js`: 124 practice questions (24 original + 40 lecture adaptations + 60 supplied draft pretest questions), stable IDs and level thresholds.
+- `assets/quest-lecture.js`: adapted scenarios with PDF title/page provenance.
+- `assets/quest-pretest.js`: 30 Basic and 30 Advanced four-option questions from the organizer's pasted draft, IDs 64–123. Imported by `scripts/import-quest-pretest.cjs`; document instructions are not game instructions.
+- `assets/quest-community.js` / `quest-club-ui.js`: daily journals, rankings, optional reflection, break timer and avatar style selection.
+- `assets/quest-insights.js`: deterministic SWOT and a lightweight extruded SVG radar with adjustable perspective; no additional WebGL context.
+- `assets/quest-cloud.js` / `quest-cloud-config.js`: optional Supabase RPC integration. Empty configuration keeps the game local and explicitly labels local rankings.
+- `supabase/quest-setup.sql`: installable private tables, validated RPCs and generated code/question seeds; see `SUPABASE-SETUP.md`.
 - `assets/quest-audio.js`: original synthesized ambient music and effects; opt-in, volume controlled, suspended when paused/hidden/signed out.
 - `assets/quest-neon.css`: responsive game HUD, touch movement, minimap, settings and neon presentation.
 - `assets/quest-world.js`: real WebGL 3D geometry, character movement, click navigation,
@@ -36,20 +41,40 @@ in each skill, a three-answer combo, and level five.
 
 ## Persistence and boundaries
 
-There is no server, authentication or centralized leaderboard. Student number + normalized
-name key a localStorage profile. This is self-reported practice progress, not verified
-attendance or an assessment record. Only enter a display name needed for practice.
+The shipped cloud configuration is empty: no actual Supabase project is provisioned.
+Roster code keys a localStorage profile and names come from `researchers.json`.
+This is self-reported practice progress, not verified attendance or an assessment record.
 Never use these records as an access-control decision or certified academic score.
 
 Profiles contain XP, totals, per-skill correct counts, combo, current round/question IDs,
 claimed crystals/stations and at most 200 recent event records. Names render as text.
-Reload requires entering the same identifier and name. Different names produce separate
-profiles. Another tab changing the current record signs the stale tab out to avoid
+Reload requires entering the same identifier. Legacy profiles keyed by code and name migrate
+using the valid profile with greatest XP; old keys remain untouched. No totals are merged.
+Another tab changing the current record signs the stale tab out to avoid
 silently overwriting progress. This is not a transactional multi-device system.
 
 Blocked or full storage shows an explicit warning and preserves in-memory play and JSON
 export. Corrupt records are not overwritten. Clearing browser storage loses progress.
-Export downloads a readable JSON history; importing and cross-device sync are not implemented.
+Export downloads a readable JSON history; importing and cross-device XP/SWOT sync are not implemented.
+
+Rank points are separate from XP. Only the first answer per code/question/Bangkok day earns
+40 correct or 10 incorrect points, plus 5 per unique crystal/day. No round/combo bonuses.
+Ties share rank; daily/total views support A/B filtering. Old XP is not uploaded.
+Central ranking writes require opt-in and an anonymous auth session. Codes remain self-reported,
+not verified identities. Server grading, unique constraints and event UUIDs prevent duplicate
+credits but cannot prove physical gameplay or prevent someone choosing another person's code.
+
+SWOT uses the first-ever answer per distinct question. At least three per topic are needed
+for a tentative S/W classification; >=70% is a game heuristic, not a validated ability cutoff.
+Unknown axes do not become zero. O/T explain learning options and interpretation risks;
+strategies are deterministic suggestions. This is a first-exposure practice snapshot, not a
+validated pre/post measure of learning gains. All axes expose exact counts alongside rates.
+
+Optional three-item 1–5 reflection covers perceived relaxation, understanding and satisfaction,
+plus a preferred next topic. Local latest responses stay separate by member code. Online
+responses omit names/codes, but carry the technical auth UID: administrators can correlate it.
+Public RPC only releases a fixed 30-day aggregate after at least five anonymous accounts,
+which are not necessarily five unique people. No medical or causal efficacy claims.
 
 ## Accessibility and performance
 
@@ -80,9 +105,9 @@ development article. Each adapted question records a PDF page number, shown afte
 Original IDs 0–23 remain original practice questions and are labeled accordingly, not
 misrepresented as lecturer-authored questions. IDs 24–63 are new adaptations.
 
-Both supplied Google Forms currently redirect to closedform, and Drive retrieval returned
-403. Their question content has NOT been incorporated or claimed as a source. A readable
-export of the original pre-tests is still needed to fulfill that part of the request.
+Both supplied Google Forms redirected to closedform, and Drive retrieval returned 403.
+The later organizer-supplied pasted draft provides the 60 new questions. They are labeled
+as that draft, not represented as a verified export of the original closed forms.
 The YouTube reference was inspected around 9:57 and 10:22: neon city, immersive camera and
 atmospheric lighting inspired the lab district; its assets/code/audio were not copied.
 
@@ -96,14 +121,21 @@ are preserved. XP remains optional recreational practice, not an academic grade.
 Serve the directory with `python -m http.server 4173 --bind 127.0.0.1`.
 Run `node scripts/verify-quest.cjs`, with `PLAYWRIGHT_MODULE` or `NODE_PATH` set if needed.
 The script covers rendered WebGL, actual keyboard pickup, answers/combos/round rewards,
-reload, separate profiles, name escaping, export, corruption, blocked storage, responsive
-navigation and module-failure fallback. It uses synthetic students and ignored screenshots.
+reload, separate profiles, safe name rendering, export, corruption, blocked storage, responsive
+navigation and module-failure fallback. Tests use isolated browser storage and no production writes.
 Run the existing `node scripts/verify.cjs` for navigation/Portfolio regressions.
-Run `node scripts/verify-neon.cjs` for the 64-question source contract, real station
+Run `node scripts/verify-neon.cjs` for the 124-question source contract, real station
 pathfinding, audio context suspension, graphics selection and mobile movement release.
 Before publishing, run `python scripts/version-assets.py`.
 
-There is no build command or backend migration. Deployment is the existing GitHub Pages
-workflow on push to main. Local implementation does not publish the live website.
+Run `node scripts/verify-community.cjs` for first-attempt evidence, timezone boundaries, ties,
+canonical roster, migration, four choices, survey isolation, responsive radar and mocked
+cloud retry/idempotency. Run `node scripts/verify-quest-db.cjs` with PGlite for actual SQL
+permissions, server grading, duplicates, date validation and aggregate privacy gating.
+These checks passed locally on 2026-09-25; actual Supabase provider setup remains unverified
+until the project is created and connected. The config is deliberately blank.
+
+There is no frontend build step. Deployment uses the existing GitHub Pages workflow on push
+to main. Supabase setup is a separate manual step documented in `SUPABASE-SETUP.md`.
 
 Three.js integration reference: https://threejs.org/manual/pages/installation.html

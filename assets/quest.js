@@ -1,11 +1,15 @@
-import { topics, questions, levelOf, floorXP, titles } from './quest-data.js?v=20260925-2';
+import { topics, questions, levelOf, floorXP, titles } from './quest-data.js?v=community-1';
 import { createSoundtrack } from './quest-audio.js?v=20260925-2';
+import { dayKey, normalizeCode, ensureJournal, recordPractice } from './quest-community.js?v=community-1';
+import { createClub } from './quest-club-ui.js?v=community-1';
 
 const $ = id => document.getElementById(id);
 const PREFIX = 'research10.quest.v1.';
 let player = null, playerKey = '', paused = false, scene = null, currentQuestion = null, answered = false;
 let sound = false, toastTimer, portrait, worldFailed=false;
 const soundtrack=createSoundtrack();
+let roster=[], rosterReady=false, club=null;
+const MEMBER_PREFIX='research10.quest.member.';
 const shuffle = items => {
   const result = [...items];
   for (let i = result.length - 1; i > 0; i--) {
@@ -47,7 +51,8 @@ function save() {
 function reward(amount, type, detail) {
   const oldLevel = levelOf(player.xp);
   player.xp += amount;
-  player.history.push({ at: new Date().toISOString(), type, detail, xp: amount, totalXP: player.xp });
+  const event={ at: new Date().toISOString(), type, detail, xp: amount, totalXP: player.xp };
+  player.history.push(event);recordPractice(player,event);
   player.history = player.history.slice(-200);
   save(); render();
   if (levelOf(player.xp) > oldLevel) toast(`เลเวลอัป! LEVEL ${levelOf(player.xp)} ✦`);
@@ -59,10 +64,44 @@ function toast(message) {
 function chime(success = true) {
   soundtrack.effect(success?'success':'wrong');
 }
+function memberKey(id){return MEMBER_PREFIX+encodeURIComponent(id);}
+function findStored(id){
+  try {
+    const current=localStorage.getItem(memberKey(id));
+    if(current)return {key:memberKey(id),raw:current};
+    // Keep original saves; choose the valid legacy profile with the most XP.
+    let best=null, first=null;
+    for(let i=0;i<localStorage.length;i++){
+      const key=localStorage.key(i);if(!key?.startsWith(PREFIX+encodeURIComponent(id)+'.'))continue;
+      const raw=localStorage.getItem(key);first||={key,raw};
+      try{const p=JSON.parse(raw);if(valid(p)&&(!best||p.xp>best.xp))best={key,raw,xp:p.xp};}catch{}
+    }
+    return best||first;
+  } catch { /* in-memory play is still available */ }
+  return null;
+}
+async function loadRoster(){
+  try{
+    const response=await fetch('researchers.json',{cache:'no-cache'});if(!response.ok)throw new Error('roster');
+    roster=(await response.json()).filter(item=>/^[AB]\d{2}$/.test(item.code)&&typeof item.name==='string');rosterReady=true;
+    $('retry-roster').hidden=true;updateMember();renderRanking();
+    $('member-status').textContent=`พบรายชื่อ ${roster.length} คน · กรอกรหัสเพื่อเติมชื่ออัตโนมัติ`;
+  }catch{roster=[];rosterReady=false;$('member-status').textContent='โหลดรายชื่อไม่ได้ชั่วคราว กรุณาลองใหม่เพื่อใช้ชื่อที่ถูกต้อง';$('retry-roster').hidden=false;}
+}
+function updateMember(){
+  const id=normalizeCode($('student-id').value);
+  const member=roster.find(item=>item.code===id);$('student-name').value=member?.name||'';
+  $('student-name').readOnly=true;
+  $('member-status').textContent=member?`${member.track==='Advanced'?'Advanced':'Basic'} · กลุ่ม ${member.group} · ชื่อนี้อ้างอิงจากรายชื่อเว็บไซต์`:'ยังไม่พบรหัสนี้ในรายชื่อ A01–A30 / B01–B50';
+  return member;
+}
+function renderRanking(){
+  club?.ranking(roster);
+}
 function render() {
   soundtrack.active(!!player&&!paused&&!document.hidden);
   document.body.classList.toggle('is-playing',!!player);
-  $('hud-xp').textContent=player?`${player.xp} XP · LV.${levelOf(player.xp)}`:'64 ภารกิจความรู้';
+  $('hud-xp').textContent=player?`${player.xp} XP · LV.${levelOf(player.xp)}`:`${questions.length} ภารกิจความรู้`;
   $('hud-missions').textContent=`${player?.round.done.length||0} / 4 สถานี`;
   $('welcome').hidden = !!player; $('login-card').hidden = !!player; $('profile-card').hidden = !player;
   $('pause').disabled = !player;
@@ -85,6 +124,7 @@ function render() {
     });
     return button;
   }));
+  renderRanking();club?.update(player);
   if (!player) return;
   const level = levelOf(player.xp), target = floorXP(level + 1);
   $('profile-name').textContent = player.name; $('profile-code').textContent = `RESEARCHER · ${player.id}`;
@@ -92,6 +132,8 @@ function render() {
   $('rank').textContent = titles[Math.min(level - 1, titles.length - 1)];
   $('level-progress').max = target - floorXP(level); $('level-progress').value = player.xp - floorXP(level);
   $('next-level').textContent = `อีก ${(target - player.xp).toLocaleString()} XP สู่เลเวล ${level + 1}`;
+  const today=player.journal?.[dayKey()]||{xp:0,missions:0};$('today-xp').textContent=`${today.xp||0} XP`;$('today-missions').textContent=today.missions||0;
+  $('avatar-style').value=player.avatar;scene?.style(player.avatar);portrait?.style(player.avatar);
   $('completed').textContent = player.completed; $('crystals').textContent = player.crystals; $('best-streak').textContent = player.bestStreak;
   $('badges').replaceChildren(...[
     ['✦ ก้าวแรก', player.completed > 0], ['◇ ครบทุกทักษะ', player.skills.every(n => n > 0)],
@@ -99,17 +141,19 @@ function render() {
   ].map(([label, earned]) => { const badge = document.createElement('span'); badge.className = 'badge' + (earned ? ' earned' : ''); badge.textContent = label; badge.title = earned ? 'ปลดล็อกแล้ว' : 'ยังไม่ปลดล็อก'; return badge; }));
   scene?.sync(player.round);
 }
+$('student-id').addEventListener('input',updateMember);
+$('retry-roster').addEventListener('click',loadRoster);
+$('avatar-style').addEventListener('change',()=>{if(player){player.avatar=$('avatar-style').value;save();render();portrait?.wave();}});
 $('login-form').addEventListener('submit', event => {
   event.preventDefault();
-  const id = $('student-id').value.trim().toUpperCase().normalize('NFC');
-  const name = $('student-name').value.trim().replace(/\s+/g, ' ').normalize('NFC');
-  if (!/^[A-Z0-9ก-๙-]{1,20}$/.test(id) || name.length < 2 || name.length > 80) {
-    $('login-error').hidden = false; $('login-error').textContent = 'กรุณากรอกเลขที่ และชื่ออย่างน้อย 2 ตัวอักษร'; return;
+  const id=normalizeCode($('student-id').value),member=roster.find(item=>item.code===id),name=member?.name;
+  if (!rosterReady||!member) {
+    $('login-error').hidden = false; $('login-error').textContent = 'กรุณาใช้รหัสในรายชื่อ A01–A30 หรือ B01–B50 และรอโหลดรายชื่อให้สำเร็จ'; return;
   }
   $('login-error').hidden = true;
-  playerKey = PREFIX + encodeURIComponent(id) + '.' + encodeURIComponent(name.toLocaleLowerCase('th'));
+  playerKey = memberKey(id);
   let restored, stored;
-  try { stored = localStorage.getItem(playerKey); } catch { /* A storage-blocked browser can play in memory. */ }
+  stored=findStored(id)?.raw;
   try {
     if (stored) { restored = JSON.parse(stored); if (!valid(restored)) throw new Error('Invalid save'); }
   } catch {
@@ -117,7 +161,9 @@ $('login-form').addEventListener('submit', event => {
     $('login-error').textContent = 'อ่านข้อมูลในเครื่องไม่ได้ หากมีข้อมูลเดิม ระบบจะไม่เขียนทับ กรุณาตรวจการอนุญาตพื้นที่จัดเก็บหรือใช้โปรไฟล์ใหม่';
     return;
   }
-  player = restored || { version: 1, id, name, xp: 0, completed: 0, crystals: 0, bestStreak: 0, streak: 0, skills: [0,0,0,0], history: [], round: makeRound() };
+  if(restored)restored.name=name;
+  player = ensureJournal(restored || { version: 1, id, name, xp: 0, completed: 0, crystals: 0, bestStreak: 0, streak: 0, skills: [0,0,0,0], history: [], round: makeRound() });
+  player.id=id;player.name=name;
   paused = false; $('pause-overlay').hidden = true; $('pause').textContent = 'พักเกม';
   save(); render(); scene?.reset(); portrait?.wave(); $('world').focus({preventScroll:true});
   toast(restored ? 'ยินดีต้อนรับกลับ! ไปสำรวจต่อกัน' : 'ยินดีต้อนรับสู่ Sky Lab ✦');
@@ -171,7 +217,7 @@ function openChallenge(topicIndex) {
   $('feedback').hidden = true; $('finish-question').hidden = true;
   $('answers').replaceChildren(...shuffle(currentQuestion.options.map((text, index) => ({text,index}))).map((option, i) => {
     const button = document.createElement('button'); button.className = 'answer';
-    const number = document.createElement('b'); number.textContent = ['A','B','C'][i];
+    const number = document.createElement('b'); number.textContent = ['A','B','C','D'][i];
     const label = document.createElement('span'); label.textContent = option.text;
     button.append(number,label); button.dataset.answer = option.index;
     button.addEventListener('click', () => submitAnswer(option.index, button)); return button;
@@ -190,12 +236,13 @@ function submitAnswer(index, button) {
   if (!correct) button.classList.add('wrong');
   let bonus = 0;
   if (player.round.done.length === 4 && !player.round.bonus) { player.round.bonus = true; bonus = 60; }
-  reward(earned + bonus, 'mission', { question: currentQuestion.id, correct, round: player.round.number, combo, roundBonus: bonus });
+  reward(earned + bonus, 'mission', { question: currentQuestion.id, answer:index, correct, round: player.round.number, combo, roundBonus: bonus });
+  club?.event(player,{kind:'mission',item:currentQuestion.id,answer:index});
   $('feedback').replaceChildren();
   const heading = document.createElement('strong'); heading.textContent = correct ? `ถูกต้อง! +${earned} XP${combo ? ` · คอมโบ ${player.streak}` : ''}` : 'ได้เรียนรู้เพิ่มแล้ว +10 XP';
   const explanation = document.createElement('span'); explanation.textContent = currentQuestion.explanation + (bonus ? ' ✦ สำรวจครบ 4 สถานี รับโบนัสรอบ +60 XP!' : '');
   $('feedback').append(heading, explanation); $('feedback').hidden = false; $('finish-question').hidden = false;
-  $('question-source').textContent=currentQuestion.source?`ดัดแปลงจาก ${currentQuestion.source.title} · หน้า ${currentQuestion.source.page} (เลขหน้า PDF)`:'โจทย์ฝึกพื้นฐานที่จัดทำสำหรับเกม ไม่ใช่ข้อสอบ pre-test ต้นฉบับ';
+  $('question-source').textContent=currentQuestion.source?`ที่มา: ${currentQuestion.source.title} · ${currentQuestion.source.page?'หน้า '+currentQuestion.source.page+' (PDF)':currentQuestion.source.section+' ข้อ '+currentQuestion.source.question}`:'โจทย์ฝึกพื้นฐานที่จัดทำสำหรับเกม';
   $('question-source').hidden=false;
   if(correct)scene?.celebrate();
   chime(correct); $('finish-question').focus();
@@ -216,13 +263,15 @@ document.addEventListener('visibilitychange', () => {
 });
 $('world-next').addEventListener('click',()=>$('new-round').click());
 window.addEventListener('blur', () => scene?.stop());
+club=createClub({getPlayer:()=>player,getRoster:()=>roster,pause:()=>setPause(true),save,toast});
+loadRoster();
 render();
 
 // Dynamically loaded so the learning flow remains available without WebGL.
 try {
-  const { createLab } = await import('./quest-world.js?v=20260925-2');
+  const { createLab } = await import('./quest-world.js?v=community-1');
   scene = createLab($('world'), {
-    active: () => !!player && !paused && !$('challenge').open,
+    active: () => !!player && !paused && !$('challenge').open && !$('satisfaction').open,
     playing:()=>!!player,
     inspect:toast,
     effect:kind=>soundtrack.effect(kind),
@@ -233,6 +282,7 @@ try {
       if (!player || paused || player.round.crystals.includes(id)) return;
       player.round.crystals.push(id); player.crystals++;
       reward(5, 'crystal', {id, round:player.round.number}); toast('✧ ผลึกความรู้ +5 XP'); chime();
+      club?.event(player,{kind:'crystal',item:id,answer:null});
     },
     nearby: index => {
       const available = player && !paused && index !== null && !player.round.done.includes(index);
@@ -242,7 +292,7 @@ try {
     failed: () => { worldFailed=true;$('world-loading').hidden = false; $('world-loading').textContent = 'ภาพ 3 มิติหยุดทำงาน รีโหลดหน้าเพื่อลองใหม่ หรือเล่นผ่านรายการสถานีได้'; }
   });
   $('world-loading').hidden = true;
-  if (player) scene.sync(player.round);
+  if (player) {scene.sync(player.round);scene.style(player.avatar);}
 } catch {
   $('world-loading').textContent = 'เครื่องนี้เปิดภาพ 3 มิติไม่ได้ แต่ยังทำภารกิจผ่านรายการสถานีได้';
   $('world-loading').style.top = '70%';
@@ -250,9 +300,9 @@ try {
 
 // The portrait is optional: a failed portrait never disables the world or quizzes.
 try {
-  const { createPortrait } = await import('./quest-avatar.js?v=20260925-2');
+  const { createPortrait } = await import('./quest-avatar.js?v=community-1');
   portrait = createPortrait($('avatar-preview'), () => !!player && !paused && !$('challenge').open);
-  if (player) portrait.wave();
+  if (player) {portrait.style(player.avatar);portrait.wave();}
 } catch {
   $('avatar-preview').hidden = true;
 }
