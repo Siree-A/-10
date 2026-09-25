@@ -1,4 +1,4 @@
-import {cloudConfig as config} from './quest-cloud-config.js?v=community-1';
+import {cloudConfig as config} from './quest-cloud-config.js?v=connected-1';
 export const configured=!!config.url&&!!config.publishableKey;
 let session=null,authPromise=null;
 async function request(path,body,token){

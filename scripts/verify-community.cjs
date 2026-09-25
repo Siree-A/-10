@@ -18,7 +18,7 @@ const legacy={version:1,id:'A12',name:'old',xp:435,completed:8,crystals:3,bestSt
  assert.match(insights(p).strength,/100%/);
  assert.deepEqual(rankRows([{code:'A01',daily:40},{code:'B01',daily:40},{code:'A02',daily:10}],'daily').map(r=>r.rank),[1,1,3]);
  assert.equal(rankRows([{code:'A01',daily:40},{code:'B01',daily:40}],'daily','B').length,1);
- const browser=await chromium.launch();const context=await browser.newContext({viewport:{width:1440,height:1050}});const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ const browser=await chromium.launch();const context=await browser.newContext({viewport:{width:1440,height:1050}});await context.route('**/quest-cloud-config.js*',r=>r.fulfill({contentType:'text/javascript',body:"export const cloudConfig={url:'',publishableKey:''}"}));const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.goto(base+'/game.html');await page.waitForFunction(()=>document.querySelector('#member-status').textContent.includes('80'));
  const roster=JSON.parse(fs.readFileSync('researchers.json','utf8'));
  for(const id of ['A12','B08','B11','B24','B34']){await page.locator('#student-id').fill(id);assert.equal(await page.locator('#student-name').inputValue(),roster.find(r=>r.code===id).name);}

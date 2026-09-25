@@ -41,7 +41,7 @@ in each skill, a three-answer combo, and level five.
 
 ## Persistence and boundaries
 
-The shipped cloud configuration is empty: no actual Supabase project is provisioned.
+The shipped configuration connects to Supabase project lvbmzcfxseoxufemdcpi (2026-09-25).
 Roster code keys a localStorage profile and names come from `researchers.json`.
 This is self-reported practice progress, not verified attendance or an assessment record.
 Never use these records as an access-control decision or certified academic score.
@@ -132,8 +132,9 @@ Run `node scripts/verify-community.cjs` for first-attempt evidence, timezone bou
 canonical roster, migration, four choices, survey isolation, responsive radar and mocked
 cloud retry/idempotency. Run `node scripts/verify-quest-db.cjs` with PGlite for actual SQL
 permissions, server grading, duplicates, date validation and aggregate privacy gating.
-These checks passed locally on 2026-09-25; actual Supabase provider setup remains unverified
-until the project is created and connected. The config is deliberately blank.
+These checks passed locally on 2026-09-25. The connected provider was also checked for
+public board/aggregate reads, anonymous sign-in, authenticated invalid-code rejection,
+and denial of unauthenticated score writes. No fabricated player scores were submitted.
 
 There is no frontend build step. Deployment uses the existing GitHub Pages workflow on push
 to main. Supabase setup is a separate manual step documented in `SUPABASE-SETUP.md`.

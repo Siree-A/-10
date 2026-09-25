@@ -1,7 +1,7 @@
 import { topics, questions, levelOf, floorXP, titles } from './quest-data.js?v=community-1';
 import { createSoundtrack } from './quest-audio.js?v=20260925-2';
 import { dayKey, normalizeCode, ensureJournal, recordPractice } from './quest-community.js?v=community-1';
-import { createClub } from './quest-club-ui.js?v=community-1';
+import { createClub } from './quest-club-ui.js?v=connected-1';
 
 const $ = id => document.getElementById(id);
 const PREFIX = 'research10.quest.v1.';

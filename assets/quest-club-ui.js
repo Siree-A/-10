@@ -1,5 +1,5 @@
 import {dayKey,localBoard,rankRows} from './quest-community.js?v=community-1';
-import {configured,rpc,readRpc} from './quest-cloud.js?v=community-1';
+import {configured,rpc,readRpc} from './quest-cloud.js?v=connected-1';
 import {insights,radar} from './quest-insights.js?v=community-1';
 const $=id=>document.getElementById(id),SURVEY='research10.quest.reflection.';
 const text=(tag,value,cls)=>{const el=document.createElement(tag);el.textContent=value;if(cls)el.className=cls;return el;};
